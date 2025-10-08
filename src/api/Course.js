@@ -2,8 +2,18 @@ import axiosInstance from '../services/api';
 
 const getCourses = async ({ queryKey }) => {
 	const [_, filters] = queryKey;
-	const params = new URLSearchParams(filters).toString();
-	const response = await axiosInstance.get(`/Courses?${params}`);
+	const params = new URLSearchParams();
+	params.append('pageIndex', filters.pageIndex);
+	params.append('pageSize', filters.pageSize);
+	params.append('sortBy', filters.sortBy);
+	if (filters.category) params.append('category', filters.category);
+	if (filters.cost) params.append('cost', filters.cost);
+	if (filters.rating) params.append('rating', filters.rating);
+	if (filters.minLecturesCount)
+		params.append('minLecturesCount', filters.minLecturesCount);
+	if (filters.maxLecturesCount)
+		params.append('maxLecturesCount', filters.maxLecturesCount);
+	const response = await axiosInstance.get(`/Courses?${params.toString()}`);
 	return response.data;
 };
 

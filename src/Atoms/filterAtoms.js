@@ -11,7 +11,6 @@ export const initialFilterState = {
 	maxLecturesCount: '',
 };
 
-
 export const courseFilterAtom = atom(initialFilterState);
 
 export const updateCourseFilterAtom = atom(null, (get, set, { key, value }) => {
