@@ -10,13 +10,14 @@ import Instructors from './components/Dashboard/instructors/Instructors.jsx';
 import Statistics from './components/Dashboard/statistics/Statistics.jsx';
 import React from 'react';
 import SignUp from './pages/SignUp.jsx';
-import LandingPage from './components/Home/LandingPage.jsx';
+import LandingPage from './pages/LandingPage.jsx';
 import CoursesListingPage from './pages/CoursesListingPage.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import CourseDetailPage from './pages/CourseDetailPage.jsx';
 import ShoppingCartPage from './pages/ShoppingCartPage.jsx';
 import OrderConfirmationPage from './pages/OrderConfirmationPage.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
+import AddCourseForm from './components/Dashboard/courses/AddCourseForm.jsx';
 
 const queryClient = new QueryClient();
 
@@ -30,7 +31,11 @@ function App() {
 							<Route path="/dashboard" element={<Dashboard />}>
 								<Route index element={<Statistics />} />
 								<Route path="instructors" element={<Instructors />} />
-								<Route path="courses" element={<Courses />} />
+								<Route exact path="courses" element={<Courses />} />
+								<Route
+									path="/dashboard/courses/add-course"
+									element={<AddCourseForm />}
+								/>
 								<Route path="*" element={<NotFound />} />
 							</Route>
 						</Route>

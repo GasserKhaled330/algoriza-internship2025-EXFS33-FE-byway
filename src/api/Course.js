@@ -13,7 +13,9 @@ const getCourses = async ({ queryKey }) => {
 		params.append('minLecturesCount', filters.minLecturesCount);
 	if (filters.maxLecturesCount)
 		params.append('maxLecturesCount', filters.maxLecturesCount);
+
 	const response = await axiosInstance.get(`/Courses?${params.toString()}`);
+	console.log(response.data);
 	return response.data;
 };
 
@@ -22,21 +24,25 @@ const getTopCourses = async (count) => {
 	return response.data;
 };
 
-const getTopCoursesInSameCategory = async ({ queryKey }) => {
-	const [_, courseId, categoryId] = queryKey;
+const getTopCoursesInSameCategory = async (courseId, categoryId) => {
 	const response = await axiosInstance.get(
 		`/Courses/${courseId}/related/top-rated?categoryId=${categoryId}`
 	);
 	return response.data;
 };
 
-const getCourseById = async ({ queryKey }) => {
-	const [_, courseId] = queryKey;
+const getCourseById = async (courseId) => {
 	const response = await axiosInstance.get(`/Courses/${courseId}`);
 	return response.data;
 };
 
+const getCoursesCount = async () => {
+	const response = await axiosInstance.get('/Courses/count');
+	return response.data;
+};
+
 const saveCourse = async (course) => {
+	// const form = new FormData();
 	const courseId = course.get('Id');
 	if (courseId) {
 		const response = await axiosInstance.put(`/Courses/${courseId}`, course);
@@ -58,6 +64,7 @@ const Course = {
 	getCourseById,
 	removeCourse,
 	saveCourse,
+	getCoursesCount,
 };
 
 export default Course;

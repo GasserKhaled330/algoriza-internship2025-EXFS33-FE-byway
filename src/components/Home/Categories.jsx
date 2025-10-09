@@ -5,9 +5,11 @@ import Category from '../../api/Category';
 
 const Categories = () => {
 	const [activeIndex, setActiveIndex] = useState(0);
-	const ITEMS_TO_SHOW = 3; // Number of items visible at once
-	// Percentage width of one item (33.333...)
+	const ITEMS_TO_SHOW = 3;
 	const ITEM_WIDTH_PERCENT = 100 / ITEMS_TO_SHOW;
+
+	const GAP_REM_VALUE = 1.25;
+	const GAP_PER_ITEM = (GAP_REM_VALUE * (ITEMS_TO_SHOW - 1)) / ITEMS_TO_SHOW;
 
 	const { data } = useQuery({
 		queryKey: ['Categories'],
@@ -15,10 +17,9 @@ const Categories = () => {
 	});
 
 	const itemCount = data?.length || 0;
-	// Maximum index we can scroll to while still showing ITEMS_TO_SHOW
+
 	const maxIndex = itemCount > ITEMS_TO_SHOW ? itemCount - ITEMS_TO_SHOW : 0;
 
-	// Translation amount in percentage
 	const slideAmount = -activeIndex * ITEM_WIDTH_PERCENT;
 
 	const nextSlide = () => {
@@ -31,6 +32,8 @@ const Categories = () => {
 
 	const isPrevDisabled = activeIndex === 0;
 	const isNextDisabled = activeIndex === maxIndex;
+
+	const TRACK_WIDTH_PERCENT = (itemCount / ITEMS_TO_SHOW) * 100;
 
 	return (
 		<section className="mx-auto py-12 px-4">
@@ -70,21 +73,24 @@ const Categories = () => {
 				</div>
 			</div>
 
-			<div className="flex overflow-x-hidden pb-2">
+			<div className="flex overflow-x-scroll md:overflow-x-hidden pb-2">
 				<div
-					className="flex w-full gap-5.5 items-center transition-transform duration-500 ease-in-out"
-					style={{ transform: `translateX(${slideAmount}%)` }}>
+					className="flex gap-5 items-center transition-transform duration-500 ease-in-out"
+					style={{
+						transform: `translateX(${slideAmount}%)`,
+						width: `${TRACK_WIDTH_PERCENT}%`,
+					}}>
 					{data?.map((item) => (
 						<div
 							key={item.id}
 							className={`flex flex-col justify-center items-center bg-gray-50 h-full flex-shrink-0 shadow-md rounded-lg p-4 `}
 							style={{
-								width: `calc(${ITEM_WIDTH_PERCENT}% - 1.25rem)`,
+								width: `calc(${ITEM_WIDTH_PERCENT}% - ${GAP_PER_ITEM}rem)`,
 							}}>
 							<div className="flex justify-center items-center bg-[#E0F2FE] w-[100px] h-[100px] rounded-full mb-3">
 								<img src={item.imagePath} alt="category image" />
 							</div>
-							<p className="text-[#0F172A] text-xl font-bold mb-3">
+							<p className="text-[#0F172A] text-lg font-bold mb-3">
 								{item.name}
 							</p>
 							<span className="text-[#334155] text-[16px]">11 Courses</span>

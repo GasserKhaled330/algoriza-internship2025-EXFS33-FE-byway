@@ -13,7 +13,7 @@ const login = async (email, password) => {
 
 export const logout = () => {
 	localStorage.removeItem('auth');
-	window.location.href = '/';
+	window.location.href = '/signin';
 };
 
 const auth = { register, login, logout };

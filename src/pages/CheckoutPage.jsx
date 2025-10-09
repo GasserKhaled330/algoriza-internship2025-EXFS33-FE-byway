@@ -8,11 +8,9 @@ import Checkout from '../api/Checkout';
 const validateForm = (formData) => {
 	const errors = {};
 
-	// Basic Address Validation
 	if (!formData.country) errors.country = 'Country is required.';
 	if (!formData.state) errors.state = 'State is required.';
 
-	// Payment Method Validation
 	if (!formData.paymentMethod) {
 		errors.paymentMethod = 'Please select a payment method.';
 	} else if (formData.paymentMethod === 'creditCard') {
@@ -31,6 +29,7 @@ const validateForm = (formData) => {
 
 const CheckoutPage = () => {
 	const navigate = useNavigate();
+
 	const [formData, setFormData] = useState({
 		country: '',
 		state: '',
@@ -40,6 +39,7 @@ const CheckoutPage = () => {
 		expiryDate: '',
 		cvv: '',
 	});
+
 	const [errors, setErrors] = useState({});
 
 	const {
@@ -59,12 +59,12 @@ const CheckoutPage = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['cartItems'] });
 			queryClient.invalidateQueries({ queryKey: ['cartCount'] });
-			alert('Checkout successful! (Demo)');
+			alert('Checkout successful!');
 			navigate('/order-confirmation');
 		},
 		onError: (error) => {
 			console.error('Checkout failed:', error);
-			alert('Checkout failed. Please check your details. (Demo)');
+			alert('Checkout failed. Please check your details.');
 		},
 	});
 
@@ -79,21 +79,14 @@ const CheckoutPage = () => {
 	const handleCheckoutSubmit = (e) => {
 		e.preventDefault();
 
-		// Run Validation
 		const validationErrors = validateForm(formData);
 		setErrors(validationErrors);
 
-		// If validation fails, stop submission
 		if (Object.keys(validationErrors).length > 0) {
 			console.log('Validation failed:', validationErrors);
 			return;
 		}
 
-		// If validation passes, proceed with mutation
-		// const checkoutPayload = {
-		// 	...formData,
-		// 	items: cartData,
-		// };
 		checkoutMutation.mutate();
 	};
 
@@ -103,15 +96,20 @@ const CheckoutPage = () => {
 		return (
 			<div className="text-center py-20 text-red-600">Error loading cart.</div>
 		);
-	if (!cartData || cartData.length === 0)
+	if (!cartData || cartData.length === 0) {
 		return (
-			<div className="text-center py-20">
-				Your cart is empty.{' '}
-				<Link to="/courses" className="text-blue-600 hover:underline">
-					Go shopping!
+			<div className="bg-gray-50 text-center py-20">
+				<p className="text-4xl text-gray-800 font-bold mb-6">
+					Your cart is empty
+				</p>
+				<Link to="/courses">
+					<button className="text-blue-600 p-3 border border-blue-600 rounded-2xl transition duration-300 hover:text-white hover:bg-blue-600 cursor-pointer">
+						Go shopping
+					</button>
 				</Link>
 			</div>
 		);
+	}
 
 	const subtotal = cartData.reduce((sum, item) => sum + item.cost, 0);
 	const taxRate = 0.15;

@@ -27,6 +27,11 @@ const getInstructorJobTitles = async () => {
 	return response.data;
 };
 
+const getInstructorsCount = async () => {
+	const response = await axiosInstance.get('/Instructors/count');
+	return response.data;
+};
+
 const saveInstructor = async (instructor) => {
 	if (instructor.get('Id')) {
 		const response = await axiosInstance.put(
@@ -49,6 +54,7 @@ const Instructor = {
 	getAllInstructors,
 	getInstructors,
 	getInstructorJobTitles,
+	getInstructorsCount,
 	saveInstructor,
 	getInstructor,
 	removeInstructor,

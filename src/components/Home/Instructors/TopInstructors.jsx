@@ -6,8 +6,8 @@ import Instructor from '../../../api/Instructor';
 
 const TopInstructors = () => {
 	const [activeIndex, setActiveIndex] = useState(0);
-	const ITEMS_TO_SHOW = 4;
-	const ITEM_WIDTH_PERCENT = 100 / ITEMS_TO_SHOW;
+	const ITEMS_TO_SHOW = 5;
+	const ITEM_WIDTH_PERCENT = Math.floor(100 / ITEMS_TO_SHOW);
 
 	const { isLoading, isError, data } = useQuery({
 		queryKey: ['Instructors'],
@@ -22,13 +22,11 @@ const TopInstructors = () => {
 		return <div>An error occurred while fetching data.</div>;
 	}
 
-	const instructors = data.data.sort((a, b) => b.rate - a.rate) || [];
+	const instructors = data.data || [];
 
 	const itemCount = instructors.length;
-	// Maximum index we can scroll to while still showing ITEMS_TO_SHOW
-	const maxIndex = itemCount > ITEMS_TO_SHOW ? itemCount - ITEMS_TO_SHOW : 0;
-
-	// Translation amount in percentage
+	const maxIndex =
+		itemCount > ITEMS_TO_SHOW ? itemCount - ITEMS_TO_SHOW + 1 : 0;
 	const slideAmount = -activeIndex * ITEM_WIDTH_PERCENT;
 
 	const nextSlide = () => {
@@ -80,12 +78,11 @@ const TopInstructors = () => {
 				</div>
 			</div>
 
-			<div className="flex overflow-x-hidden pb-2">
+			<div className="flex overflow-x-scroll md:overflow-hidden pb-2">
 				<div
-					className="flex w-full gap-5.5 items-center transition-transform duration-500 ease-in-out"
+					className="flex gap-6 items-center transition-transform duration-500 ease-in-out"
 					style={{
 						transform: `translateX(${slideAmount}%)`,
-						maxWidth: `${itemCount * ITEM_WIDTH_PERCENT}%`,
 					}}>
 					{instructors.map((instructor) => (
 						<InstructorCard

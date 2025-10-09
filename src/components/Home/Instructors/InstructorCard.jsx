@@ -13,16 +13,16 @@ const InstructorCard = ({ instructor, ITEM_WIDTH_PERCENT }) => {
 		<div
 			className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex flex-col items-center flex-shrink-0"
 			style={{
-				width: `calc(${ITEM_WIDTH_PERCENT}% - 1.25rem)`,
+				width: `calc(${ITEM_WIDTH_PERCENT}% - 1.5rem)`,
+				minHeight: '280px',
 			}}>
 			{/* Instructor Image */}
-			<div className="w-full aspect-[4/3] rounded-lg overflow-hidden mb-3">
-				{/* Placeholder for the image in the design */}
-				<img src={imageUrl} alt={name} className="w-full h-full object-cover" />
+			<div className="rounded-lg mb-3">
+				<img src={imageUrl} alt={name} className="object-cover w-full h-full" />
 			</div>
 
 			{/* Content */}
-			<div className="text-center w-full">
+			<div className="text-center">
 				{/* Name */}
 				<h3 className="text-gray-900 font-bold text-lg mb-1">{name}</h3>
 

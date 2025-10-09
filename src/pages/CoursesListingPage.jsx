@@ -28,7 +28,7 @@ const CoursesListingPage = () => {
 	}
 
 	const courses = data?.data || [];
-	console.log(courses);
+
 	return (
 		<div className="bg-gray-50 min-h-screen pt-12 pb-20">
 			<div className="mx-auto px-6">

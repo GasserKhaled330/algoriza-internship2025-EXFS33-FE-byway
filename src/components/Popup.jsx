@@ -10,7 +10,7 @@ const Popup = ({show, onClose, children}) => {
                 <button className="close-button" onClick={onClose}>
                     &times;
                 </button>
-                {children} {/* This is where your form will go */}
+                {children}
             </div>
         </div>
     );

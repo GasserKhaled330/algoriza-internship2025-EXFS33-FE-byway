@@ -74,11 +74,11 @@ const SignUp = () => {
 	console.log(mutation.error);
 
 	return (
-		<div className="grid grid-cols-2">
+		<div className="grid grid-cols-1  md:grid-cols-2">
 			<img
 				src={SignupImg}
 				alt="welcome signup image"
-				className="h-full object-cover"
+				className="hidden md:block min-h-full object-cover"
 			/>
 
 			{/* sign up form */}
@@ -132,19 +132,19 @@ const SignUp = () => {
 					<div>
 						<div className="mb-2">
 							<label
-								htmlFor="lastName"
+								htmlFor="userName"
 								className="block text-gray-700 text-sm font-medium mb-2">
 								User Name
 							</label>
 							<input
 								type="text"
-								id="lastName"
-								name="lastName"
+								id="userName"
+								name="userName"
 								value={userName}
 								onChange={(e) => setUserName(e.target.value)}
 								maxLength={50}
 								required
-								autoComplete="lastName"
+								autoComplete="userName"
 								className="text-sm outline-gray-300 outline-offset-1 outline border-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-500"
 							/>
 						</div>

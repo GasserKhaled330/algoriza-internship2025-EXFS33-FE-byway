@@ -1,7 +1,7 @@
 import axiosInstance from '../services/api';
 
 const processCheckout = async () => {
-	const response = await axiosInstance.post(`Checkout`);
+	const response = await axiosInstance.post('/Checkout');
 	return response.data;
 };
 

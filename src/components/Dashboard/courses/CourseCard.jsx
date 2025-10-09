@@ -36,11 +36,17 @@ const CourseCard = ({ course }) => {
 
 	return (
 		<div
-			className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer"
+			className="bg-white  rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer"
 			key={id}>
-			<div className="relative">
-				<img src={imagePath} alt={name} className="w-full h-40 object-cover" />
-				<span className="absolute top-2 left-2 bg-white text-gray-800 text-xs font-medium px-3 py-1 rounded-full shadow-sm">
+			<div className="relative h-40 overflow-hidden">
+				<div className="absolute inset-0 bg-gray-300 flex items-center justify-center text-gray-600 text-sm">
+					<img
+						src={imagePath}
+						alt={name}
+						className="w-full h-full object-cover"
+					/>
+				</div>
+				<span className="absolute top-2 left-2 bg-white text-gray-800 text-xs font-semibold px-3 py-1 rounded-full shadow-md">
 					{categoryName}
 				</span>
 			</div>

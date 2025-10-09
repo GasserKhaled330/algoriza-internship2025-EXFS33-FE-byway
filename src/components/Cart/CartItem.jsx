@@ -1,29 +1,12 @@
 import React from 'react';
-import { Star } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Cart from '../../api/Cart';
-
-const renderStars = (rating) => (
-	<div className="flex items-center space-x-0.5 text-yellow-500">
-		{Array.from({ length: 5 }, (_, index) => (
-			<Star
-				key={index}
-				className={`w-4 h-4 ${
-					index < Math.round(rating)
-						? 'fill-yellow-500'
-						: 'fill-gray-300 text-gray-300'
-				}`}
-			/>
-		))}
-	</div>
-);
 
 const CartItem = ({ item }) => {
 	const queryClient = useQueryClient();
 
-	// 1. Define the mutation for removing an item
 	const removeMutation = useMutation({
-		mutationFn: Cart.removeCartItem, // Pass the API function
+		mutationFn: Cart.removeCartItem,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['cartItems'] });
 			queryClient.invalidateQueries({ queryKey: ['cartCount'] });
@@ -58,13 +41,17 @@ const CartItem = ({ item }) => {
 
 					<p className="text-sm text-gray-600 mb-2">By {item.instructorName}</p>
 
+					<p className="text-gray-500 mb-2">
+						{item.totalHours} Total Hours. {item.lecturesCount} Lectures.
+						{item.level} level
+					</p>
+
 					<div className="flex items-center text-sm mb-2">
 						<span className="font-bold text-yellow-600 mr-1">{item.rate}</span>
-						{renderStars(item.rate)}
-						<span className="text-gray-500 ml-3">
-							{item.totalHours} Total Hours. {item.lecturesCount} Lectures.
-							{item.level} level
-						</span>
+						<span
+							className="average-rating"
+							style={{ '--star-fill': `${(item.rate / 5) * 100}%` }}
+							aria-label={`Rating: ${item.rate} out of 5`}></span>
 					</div>
 
 					<button

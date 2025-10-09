@@ -67,7 +67,12 @@ const ShoppingCartPage = () => {
 
 						{cartCount === 0 ? (
 							<div className="p-10 text-center text-gray-500 border border-dashed rounded-lg bg-white">
-								Your cart is empty.
+								Your cart is empty.{' '}
+								<Link
+									to="/courses"
+									className="text-sm text-blue-600 hover:underline">
+									Go Shopping!
+								</Link>
 							</div>
 						) : (
 							<div className="space-y-4">

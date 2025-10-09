@@ -5,7 +5,7 @@ export const initialFilterState = {
 	pageSize: 6,
 	sortBy: 'dateDesc',
 	category: '',
-	cost: 0,
+	cost: '',
 	rating: '',
 	minLecturesCount: '',
 	maxLecturesCount: '',

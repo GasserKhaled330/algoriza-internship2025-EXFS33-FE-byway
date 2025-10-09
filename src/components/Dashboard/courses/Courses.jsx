@@ -14,6 +14,7 @@ import CourseCard from './CourseCard.jsx';
 
 import Category from '../../../api/Category.js';
 import Course from '../../../api/Course.js';
+import { Link } from 'react-router-dom';
 
 const generateSearchBarPlaceholder = (searchField, searchOptions) => {
 	const baseHolder = 'Search by';
@@ -91,8 +92,6 @@ const Courses = () => {
 		setSearchPlaceHolder(generateSearchBarPlaceholder(field, searchOptions));
 	};
 
-	console.log(courses);
-
 	return (
 		<div className="px-4">
 			<header className="flex justify-between items-center border-b-1 border-[#E2E6EE] h-24">
@@ -109,13 +108,14 @@ const Courses = () => {
 				<div className="flex justify-between items-center">
 					<p className="text-2xl font-medium">Courses</p>
 					<div className="flex items-center gap-1">
-						<button className="bg-[#020617] text-white p-2 rounded-xl cursor-pointer text-nowrap">
-							Add Course
-						</button>
-
+						<Link to="/dashboard/courses/add-course">
+							<button className="bg-[#020617] text-white p-2 rounded-xl cursor-pointer text-nowrap">
+								Add Course
+							</button>
+						</Link>
 						<select
-							name="jobTitle"
-							id="jobTitle"
+							name="category"
+							id="category"
 							value={filters.category}
 							onChange={(e) =>
 								updateFilter({ key: 'category', value: e.target.value })

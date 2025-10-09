@@ -14,7 +14,6 @@ const Pagination = ({ totalPages, isPlaceholderData }) => {
 		setCurrentPage(newPageIndex);
 	};
 	const handlePageSizeChange = (e) => {
-		// When the page size changes, reset to the first page
 		setCurrentPage(1);
 		setPageSize(Number(e.target.value));
 	};

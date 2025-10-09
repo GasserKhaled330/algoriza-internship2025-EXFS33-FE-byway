@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import { Star, Clock, User, CheckCircle, Award } from 'lucide-react';
@@ -57,7 +57,8 @@ const CourseDetailPage = () => {
 		isError,
 	} = useQuery({
 		queryKey: ['Course', courseId],
-		queryFn: Course.getCourseById,
+		queryFn: () => Course.getCourseById(courseId),
+		enabled: !!courseId,
 	});
 
 	const { data: instructor } = useQuery({
@@ -72,8 +73,12 @@ const CourseDetailPage = () => {
 			loadedCourse?.id,
 			loadedCourse?.categoryId,
 		],
-		queryFn: Course.getTopCoursesInSameCategory,
-		enabled: !!loadedCourse?.id,
+		queryFn: () =>
+			Course.getTopCoursesInSameCategory(
+				loadedCourse?.id,
+				loadedCourse?.categoryId
+			),
+		enabled: !!loadedCourse?.id && !!loadedCourse?.categoryId,
 	});
 
 	const { data: isInCart } = useQuery({

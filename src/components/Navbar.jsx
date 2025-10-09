@@ -2,7 +2,11 @@
 import Logo from '/logo.svg';
 import SearchBar from './SearchBar.jsx';
 import { Link } from 'react-router-dom';
-import { isAuthenticatedAtom, userAtom , logoutAtom} from '../Atoms/authAtoms.js';
+import {
+	isAuthenticatedAtom,
+	userAtom,
+	logoutAtom,
+} from '../Atoms/authAtoms.js';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { ShoppingCart, LogOut, Menu } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
@@ -29,6 +33,7 @@ const Navbar = () => {
 	} = useQuery({
 		queryKey: ['cartCount'],
 		queryFn: Cart.getCartItemsCount,
+		enabled: isAuthenticated,
 	});
 
 	if (isLoading) return <p>Loading Cart Count...</p>;
@@ -84,7 +89,10 @@ const Navbar = () => {
 								</Link>
 							</div>
 
-							<button title="logout" className="cursor-pointer" onClick={()=> setLogout()}>
+							<button
+								title="logout"
+								className="cursor-pointer"
+								onClick={() => setLogout()}>
 								<LogOut strokeWidth={1.5} />
 							</button>
 

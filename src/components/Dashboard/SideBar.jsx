@@ -16,12 +16,12 @@ const menuItems = [
 ];
 
 const SideBar = () => {
-	// const [open, setOpen] = useState(true);
 	const setLogout = useSetAtom(logoutAtom);
 
 	const handleLogoutClick = () => {
 		setLogout();
 	};
+
 	return (
 		<>
 			<aside className="flex flex-col bg-white shadow-md">
@@ -45,7 +45,7 @@ const SideBar = () => {
 							<button
 								className="flex items-center cursor-pointer"
 								onClick={handleLogoutClick}>
-								<LogOut color="#96A0B6" size={18} />
+								<LogOut color="#96A0B6" size={18} className="mr-2" />
 								<span className="text-[#96A0B6]">logout</span>
 							</button>
 						</div>

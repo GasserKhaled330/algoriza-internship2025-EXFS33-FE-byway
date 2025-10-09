@@ -149,7 +149,7 @@ const SignIn = () => {
 					<img
 						src={loginImage}
 						alt="login image"
-						className="h-full object-cover "
+						className="hidden md:block min-h-full object-cover"
 					/>
 				</div>
 			</main>
