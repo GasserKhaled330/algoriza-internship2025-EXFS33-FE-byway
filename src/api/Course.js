@@ -18,7 +18,7 @@ const getCourses = async ({ queryKey }) => {
 };
 
 const getTopCourses = async (count) => {
-	const response = await axiosInstance.get(`/Courses/top-rated?${count}`);
+	const response = await axiosInstance.get(`/Courses/top-rated?count=${count}`);
 	return response.data;
 };
 
