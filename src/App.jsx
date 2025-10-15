@@ -17,7 +17,8 @@ import CourseDetailPage from './pages/CourseDetailPage.jsx';
 import ShoppingCartPage from './pages/ShoppingCartPage.jsx';
 import OrderConfirmationPage from './pages/OrderConfirmationPage.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
-import AddCourseForm from './components/Dashboard/courses/AddCourseForm.jsx';
+import MultistepCourseForm from './components/Dashboard/courses/MultistepCourseForm.jsx';
+import CourseFormContainer from './components/Dashboard/courses/CourseFormContainer.jsx';
 
 const queryClient = new QueryClient();
 
@@ -33,8 +34,16 @@ function App() {
 								<Route path="instructors" element={<Instructors />} />
 								<Route exact path="courses" element={<Courses />} />
 								<Route
-									path="/dashboard/courses/add-course"
-									element={<AddCourseForm />}
+									path="/dashboard/courses/add"
+									element={<CourseFormContainer />}
+								/>
+								<Route
+									path="/dashboard/courses/view/:courseId"
+									element={<CourseFormContainer />}
+								/>
+								<Route
+									path="/dashboard/courses/edit/:courseId"
+									element={<CourseFormContainer />}
 								/>
 								<Route path="*" element={<NotFound />} />
 							</Route>

@@ -42,8 +42,7 @@ const getCoursesCount = async () => {
 };
 
 const saveCourse = async (course) => {
-	// const form = new FormData();
-	const courseId = course.get('Id');
+	const courseId = course.get('id');
 	if (courseId) {
 		const response = await axiosInstance.put(`/Courses/${courseId}`, course);
 		return response.data;
@@ -52,6 +51,7 @@ const saveCourse = async (course) => {
 		return response.data;
 	}
 };
+
 const removeCourse = async (id) => {
 	const response = await axiosInstance.delete(`/Courses/${id}`);
 	return response.data;

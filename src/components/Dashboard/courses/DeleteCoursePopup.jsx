@@ -8,14 +8,16 @@ import {
 	showDeleteCoursePopupAtom,
 	selectedCourseIdAtom,
 } from '../../../Atoms/courseAtoms';
+
 const DeleteCoursePopup = ({ onClose }) => {
 	const showPopup = useAtomValue(showDeleteCoursePopupAtom);
 	const courseId = useAtomValue(selectedCourseIdAtom);
 
 	const queryClient = useQueryClient();
+
 	const { data: course } = useQuery({
 		queryKey: ['Course', courseId],
-		queryFn: Course.getCourseById,
+		queryFn: () => Course.getCourseById(courseId),
 		enabled: !!courseId && showPopup,
 	});
 
@@ -30,6 +32,7 @@ const DeleteCoursePopup = ({ onClose }) => {
 			console.error('Mutation error:', error);
 		},
 	});
+
 	return (
 		<Popup show={showPopup} onClose={onClose}>
 			<div className="flex flex-col items-center justify-center min-h-[250px] max-w-[400px]">
@@ -45,6 +48,7 @@ const DeleteCoursePopup = ({ onClose }) => {
 						</span>
 					</p>
 				</div>
+
 				<div className="flex justify-center">
 					<button
 						onClick={() => {

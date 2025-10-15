@@ -2,31 +2,74 @@
 import { Link, useLocation } from 'react-router-dom';
 
 const Breadcrumbs = () => {
-    const location = useLocation();
-    const pathnames = location.pathname.split('/').filter(x => x);
+	const location = useLocation();
+	const rawPathnames = location.pathname.split('/').filter((x) => x);
 
-    return (
-        <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-                {pathnames.map((name, index) => {
-                    const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`;
-                    const isLast = index === pathnames.length - 1;
-                    return isLast ? (
-                        <li key={name} className="breadcrumb-item active" aria-current="page">
-                            {name.charAt(0).toUpperCase() + name.slice(1)}
-                        </li>
-                    ) : (
-                        <li key={name} className="breadcrumb-item">
-                            <Link to={routeTo}>
-                                {name.charAt(0).toUpperCase() + name.slice(1)}
-                            </Link>
-                            <span className="px-2">/</span>
-                        </li>
-                    );
-                })}
-            </ol>
-        </nav>
-    );
+	const getCrumbText = (segment) => {
+		const segmentMap = {
+			dashboard: 'Dashboard',
+			courses: 'Courses',
+			add: 'Add New Course',
+			edit: 'Edit Course',
+			view: 'View Course',
+		};
+
+		if (segmentMap[segment]) {
+			return segmentMap[segment];
+		}
+
+		if (segment.match(/^\d+$/) || segment.length > 5) {
+			return null;
+		}
+
+		return segment.charAt(0).toUpperCase() + segment.slice(1);
+	};
+
+	const crumbsData = [];
+
+	rawPathnames.forEach((name, index) => {
+		const text = getCrumbText(name);
+
+		if (text) {
+			const routeTo = `/${rawPathnames.slice(0, index + 1).join('/')}`;
+
+			crumbsData.push({
+				name: text,
+				route: routeTo,
+			});
+		}
+	});
+
+	return (
+		<nav aria-label="breadcrumb">
+			<ol className="breadcrumb">
+				{crumbsData.map((crumb, index) => {
+					const isLast = index === crumbsData.length - 1;
+
+					return (
+						<li
+							key={crumb.route}
+							className={`breadcrumb-item ${
+								isLast ? 'text-gray-900 font-semibold' : 'text-gray-600'
+							}`}>
+							{isLast ? (
+								<span aria-current="page">{crumb.name}</span>
+							) : (
+								<>
+									<Link
+										to={crumb.route}
+										className="text-blue-600 hover:underline">
+										{crumb.name}
+									</Link>
+									<span className="px-2 text-gray-400">/</span>
+								</>
+							)}
+						</li>
+					);
+				})}
+			</ol>
+		</nav>
+	);
 };
 
 export default Breadcrumbs;

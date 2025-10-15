@@ -60,7 +60,7 @@ const Courses = () => {
 
 	const { data: categories } = useQuery({
 		queryKey: ['Categories'],
-		queryFn: Category.getCategories,
+		queryFn: () => Category.getCategories(),
 	});
 
 	const {
@@ -108,7 +108,7 @@ const Courses = () => {
 				<div className="flex justify-between items-center">
 					<p className="text-2xl font-medium">Courses</p>
 					<div className="flex items-center gap-1">
-						<Link to="/dashboard/courses/add-course">
+						<Link to="/dashboard/courses/add">
 							<button className="bg-[#020617] text-white p-2 rounded-xl cursor-pointer text-nowrap">
 								Add Course
 							</button>

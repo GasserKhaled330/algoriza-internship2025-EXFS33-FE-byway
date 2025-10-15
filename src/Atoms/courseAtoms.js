@@ -28,19 +28,19 @@ export const closeDeletePopupAtom = atom(null, (get, set) => {
 
 // Two step form
 
-const initialFormData = {
-	courseName: '',
-	category: '',
+export const initialFormData = {
+	name: '',
+	categoryId: '',
 	level: '',
-	instructor: '',
-	cost: 0,
-	totalHours: 0,
+	instructorId: '',
+	cost: '',
+	totalHours: '',
 	rate: 0,
 	description: '',
 	certification: '',
 	image: null,
 
-	contents: [{ name: '', lecturesNumber: 0, time: 0 }],
+	contents: [{ id: '', name: '', lecturesCount: '', durationInHours: '' }],
 };
 
 export const formDataAtom = atom(initialFormData);

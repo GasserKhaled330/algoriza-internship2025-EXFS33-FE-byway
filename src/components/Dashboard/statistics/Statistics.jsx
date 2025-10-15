@@ -22,11 +22,6 @@ const Statistics = () => {
 		{ month: 'Nov', deposit: 330, withdraw: 300 },
 		{ month: 'Dec', deposit: 400, withdraw: 350 },
 	];
-	const entityCounts = {
-		instructors: 50,
-		categories: 10,
-		courses: 36,
-	};
 
 	const { data: categories } = useQuery({
 		queryKey: ['Categories'],
@@ -42,6 +37,12 @@ const Statistics = () => {
 		queryKey: ['Courses', 'count'],
 		queryFn: Course.getCoursesCount,
 	});
+
+	const entityCounts = {
+		instructors: instructorsCount,
+		categories: categories?.length,
+		courses: coursesCount,
+	};
 
 	return (
 		<div className="container">

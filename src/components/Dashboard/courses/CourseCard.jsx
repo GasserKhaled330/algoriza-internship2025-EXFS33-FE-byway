@@ -7,10 +7,13 @@ import {
 	closeDeletePopupAtom,
 } from '../../../Atoms/courseAtoms';
 import DeleteCoursePopup from './DeleteCoursePopup';
+import { Link } from 'react-router-dom';
+
 const CourseCard = ({ course }) => {
 	const setCourseId = useSetAtom(selectedCourseIdAtom);
 	const setShowDeletePopup = useSetAtom(showDeleteCoursePopupAtom);
 	const closeDeleteCoursePopup = useSetAtom(closeDeletePopupAtom);
+
 	const {
 		id,
 		imagePath,
@@ -23,6 +26,7 @@ const CourseCard = ({ course }) => {
 		cost,
 		contents,
 	} = course;
+
 	const totalLectures = contents.reduce(
 		(sum, content) => sum + content.lecturesCount,
 		0
@@ -32,6 +36,7 @@ const CourseCard = ({ course }) => {
 		setCourseId(id);
 		setShowDeletePopup(true);
 	};
+
 	const handleClosePopup = closeDeleteCoursePopup;
 
 	return (
@@ -74,16 +79,20 @@ const CourseCard = ({ course }) => {
 				</div>
 
 				<div className="flex items-center gap-3 text-gray-800">
-					<button
-						className="flex justify-center items-center bg-gray-100 shadow-xl rounded  cursor-pointer"
-						title="show course">
-						<Eye color="#5879DC" size={18} />
-					</button>
-					<button
-						className="flex justify-center items-center bg-gray-100 shadow-md rounded cursor-pointer"
-						title="update course">
-						<PencilLine color="#5879DC" size={16} />
-					</button>
+					<Link to={`/dashboard/courses/view/${course.id}`}>
+						<button
+							className="flex justify-center items-center bg-gray-100 shadow-xl rounded  cursor-pointer"
+							title="show course">
+							<Eye color="#5879DC" size={16} />
+						</button>
+					</Link>
+					<Link to={`/dashboard/courses/edit/${course.id}`}>
+						<button
+							className="flex justify-center items-center bg-gray-100 shadow-md rounded cursor-pointer"
+							title="update course">
+							<PencilLine color="#5879DC" size={16} />
+						</button>
+					</Link>
 					<button
 						className="flex justify-center items-center bg-gray-100 shadow-md rounded  cursor-pointer"
 						title="delete course"

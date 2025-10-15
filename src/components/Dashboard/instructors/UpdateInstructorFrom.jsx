@@ -93,6 +93,7 @@ const UpdateInstructorFrom = () => {
 	};
 
 	if (!showPopup) return null;
+	
 	return (
 		<Popup show={showPopup} onClose={onClose}>
 			<h2 className="text-lg font-medium text-[#202637] mb-4">

@@ -13,6 +13,7 @@ const UpdateInstructorPopup = () => {
 	if (!instructorId || !showPopup) {
 		return null;
 	}
+
 	return <AddInstructorPopup isUpdate={true} />;
 };
 
