@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { ImageUp } from 'lucide-react';
+import { ImageUp, Star } from 'lucide-react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Instructor from '../../../api/Instructor.js';
 import {
+	instructorJobTitlesAtom,
 	selectedInstructorIdAtom,
 	showUpdatePopupAtom,
 	closeAllPopupsAtom,
 } from '../../../Atoms/instructorAtoms.js';
 import Popup from '../../Popup.jsx';
+import Spinner from '../../Common/Spinner.jsx';
+import Loader from '../../Common/Loader.jsx';
+import toast from 'react-hot-toast';
 
 const UpdateInstructorFrom = () => {
+	const jobTitles = useAtomValue(instructorJobTitlesAtom);
+	const instructorId = useAtomValue(selectedInstructorIdAtom);
 	const showPopup = useAtomValue(showUpdatePopupAtom);
 	const onClose = useSetAtom(closeAllPopupsAtom);
-	const instructorId = useAtomValue(selectedInstructorIdAtom);
 
 	const [image, setImage] = useState('');
 	const [imagePreview, setImagePreview] = useState('');
@@ -24,12 +29,11 @@ const UpdateInstructorFrom = () => {
 
 	const queryClient = useQueryClient();
 
-	const { data: jobTitles } = useQuery({
-		queryKey: ['instructor', 'jobTitles'],
-		queryFn: Instructor.getInstructorJobTitles,
-	});
-
-	const { data: instructor } = useQuery({
+	const {
+		data: instructor,
+		isPending,
+		isFetching,
+	} = useQuery({
 		queryKey: ['instructor', instructorId],
 		queryFn: () => Instructor.getInstructor(instructorId),
 		enabled: !!instructorId && showPopup,
@@ -47,13 +51,23 @@ const UpdateInstructorFrom = () => {
 
 	const mutation = useMutation({
 		mutationKey: ['saveInstructor'],
-		mutationFn: (newInstructor) => Instructor.saveInstructor(newInstructor),
+		mutationFn: (updatedInstructor) =>
+			Instructor.saveInstructor(updatedInstructor),
 		onSuccess: async () => {
 			onClose();
 			await queryClient.invalidateQueries({ queryKey: ['instructors'] });
+			toast.success(
+				<p className="text-sm font-medium">
+					instructor data updated successfully
+				</p>
+			);
 		},
-		onError: (error) => {
-			console.error('Mutation error:', error);
+		onError: () => {
+			toast.error(
+				<p className="text-sm font-medium">
+					Failed to update instructor data, Please try again later.
+				</p>
+			);
 		},
 	});
 
@@ -70,8 +84,8 @@ const UpdateInstructorFrom = () => {
 		setJobTitle(e.target.value);
 	};
 
-	const handleRateChange = (e) => {
-		setRate(e.target.value);
+	const handleRateChange = (rate) => {
+		setRate(rate);
 	};
 
 	const handleBioChange = (e) => {
@@ -93,7 +107,9 @@ const UpdateInstructorFrom = () => {
 	};
 
 	if (!showPopup) return null;
-	
+	if (isPending || isFetching) {
+		return <Loader />;
+	}
 	return (
 		<Popup show={showPopup} onClose={onClose}>
 			<h2 className="text-lg font-medium text-[#202637] mb-4">
@@ -175,18 +191,19 @@ const UpdateInstructorFrom = () => {
 						<label htmlFor="rate" className="text-sm font-medium mb-2">
 							Rate
 						</label>
-						<input
-							type="number"
-							name="rate"
-							id="rate"
-							min="0"
-							max="5"
-							step="0.5"
-							value={rate}
-							className="bg-gray-100 text-sm font-medium rounded-lg p-2 focus:outline-blue-500"
-							placeholder="Write here"
-							onChange={handleRateChange}
-						/>
+						<div className="flex items-center py-2 space-x-1">
+							{[1, 2, 3, 4, 5].map((star) => (
+								<Star
+									key={star}
+									className={`w-6 h-6 cursor-pointer ${
+										rate >= star
+											? 'text-yellow-400 fill-yellow-400 '
+											: 'text-gray-300'
+									}`}
+									onClick={() => handleRateChange(star)}
+								/>
+							))}
+						</div>
 					</div>
 				</div>
 				<div className="flex flex-col">
@@ -196,12 +213,10 @@ const UpdateInstructorFrom = () => {
 					<textarea
 						name="bio"
 						id="bio"
-						className="h-full bg-gray-100 text-sm font-medium rounded-2xl p-2 resize-none focus:outline-blue-500"
+						className=" min-h-[50px] max-h-[100px] bg-gray-100 text-sm font-medium rounded p-2 resize-y focus:outline-blue-500"
 						value={bio}
 						placeholder="Write here"
 						onChange={handleBioChange}
-						rows="5"
-						cols="40"
 						maxLength="500"
 						autoComplete="bio"
 					/>
@@ -209,16 +224,18 @@ const UpdateInstructorFrom = () => {
 				<div className="flex justify-center items-center">
 					<button
 						type="submit"
-						className="w-3xs bg-gray-800  text-white text-2xl font-semibold p-2 rounded-2xl cursor-pointer hover:bg-gray-950 "
+						className="w-1/2 bg-gray-800  text-white text-xl font-medium p-2 rounded-2xl cursor-pointer hover:bg-gray-950"
 						disabled={mutation.isPending}>
-						{mutation.isPending ? 'Updating...' : 'Update'}
+						{mutation.isPending ? (
+							<p className="flex justify-center items-center">
+								<Spinner width={24} height={24} />
+								<span className="ml-2">Updating...</span>
+							</p>
+						) : (
+							'Update'
+						)}
 					</button>
 				</div>
-				{mutation.isError && (
-					<div className="bg-red-100 text-red-800 p-4 rounded-md">
-						<p>Failed to update instructor data, Please try again later.</p>
-					</div>
-				)}
 			</form>
 		</Popup>
 	);

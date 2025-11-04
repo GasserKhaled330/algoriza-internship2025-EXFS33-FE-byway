@@ -1,14 +1,24 @@
 import React from 'react';
+import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
-import { Star, Clock, User, CheckCircle, Award } from 'lucide-react';
-import CourseCard from '../components/Home/Courses/CourseCard';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import CourseCard from '../components/Home/Courses/CourseCard';
 import Course from '../api/Course';
 import Instructor from '../api/Instructor';
-import AvaterImage from '/avater-img.webp';
 import Cart from '../api/Cart';
-import { Link } from 'react-router-dom';
+import { useAtomValue } from 'jotai';
+import { isAuthenticatedAtom } from '../Atoms/authAtoms';
+import { Star, Clock, User, CheckCircle, Award } from 'lucide-react';
+import AvaterImage from '/avater-img.webp';
+import Loader from '../components/Common/Loader';
+import Spinner from '../components/Common/Spinner';
+import Facebook from '/facebook.png';
+import Microsoft from '/microsoft.png';
+import Github from '/github.png';
+import Google from '/google.png';
+import X from '/twitter.png';
 
 const CourseMeta = ({ icon: Icon, text }) => (
 	<div className="flex items-center text-gray-600 text-sm">
@@ -48,8 +58,18 @@ const learnerReviews = [
 	},
 ];
 
+const socialIcons = [
+	{ name: 'facebook', Icon: Facebook, href: '#' },
+	{ name: 'github', Icon: Github, href: '#' },
+	{ name: 'google', Icon: Google, href: '#' },
+	{ name: 'twitter', Icon: X, href: '#' },
+	{ name: 'microsoft', Icon: Microsoft, href: '#' },
+];
+
 const CourseDetailPage = () => {
 	const { courseId } = useParams();
+	const navigate = useNavigate();
+	const isAuthenticated = useAtomValue(isAuthenticatedAtom);
 
 	const {
 		data: loadedCourse,
@@ -93,32 +113,44 @@ const CourseDetailPage = () => {
 		mutationKey: ['Cart', 'save'],
 		mutationFn: (courseId) => Cart.saveCartItem(courseId),
 		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: ['cartItems'] });
-			await queryClient.invalidateQueries({ queryKey: ['cartCount'] });
-			await queryClient.invalidateQueries({
-				queryKey: ['Cart', 'itemStatus', courseId],
-			});
-			console.log('item add sccessfully');
+			await Promise.all([
+				queryClient.invalidateQueries({ queryKey: ['cartItems'] }),
+				queryClient.invalidateQueries({ queryKey: ['cartCount'] }),
+				queryClient.invalidateQueries({
+					queryKey: ['Cart', 'itemStatus', courseId],
+				}),
+			]);
 		},
-		onError: (error) => {
-			console.error('Mutation error:', error);
+		onError: () => {
+			toast.error(
+				<p className="text-sm font-medium">Failed to add course to cart</p>
+			);
 		},
 	});
 
 	if (isLoading) {
-		return <div>Loading courses...</div>;
+		return <Loader />;
 	}
 
 	if (isError) {
-		return <div>An error occurred while fetching data.</div>;
+		toast.error(
+			<p className="text-sm font-medium">
+				An error occurred while fetching course data.
+			</p>
+		);
 	}
 
 	const buttonDisabled = mutation.isPending || isInCart;
-	const buttonText = mutation.isPending
-		? 'Adding...'
-		: isInCart
-		? 'Added'
-		: 'Add to Cart';
+	const buttonText = mutation.isPending ? (
+		<p className="flex justify-center items-center">
+			<Spinner width={24} height={24} />
+			<span className="ml-2">Adding...</span>
+		</p>
+	) : isInCart ? (
+		'Added'
+	) : (
+		'Add to Cart'
+	);
 
 	const totalLectures =
 		loadedCourse?.contents.reduce((sum, content) => {
@@ -143,7 +175,44 @@ const CourseDetailPage = () => {
 	};
 
 	const handleAddToCartClick = (courseId) => {
-		mutation.mutate(courseId);
+		if (!isAuthenticated) {
+			toast.error(
+				<p className="text-sm font-medium">
+					Failed to add this course to cart. You should be
+					<Link
+						to="/signin"
+						className="text-sm text-blue-400 font-medium underline ml-1 transition duration-300 hover:no-underline"
+						onClick={() => toast.dismiss()}>
+						logged in
+					</Link>
+				</p>
+			);
+			return;
+		} else {
+			mutation.mutate(courseId);
+		}
+	};
+
+	const handleBuyNowClick = (courseId) => {
+		if (!isAuthenticated) {
+			toast.error(
+				<p className="text-sm font-medium">
+					Failed to buy this course. You should be
+					<Link
+						to="/signin"
+						className="text-sm text-blue-400 font-medium underline ml-1 transition duration-300 hover:no-underline"
+						onClick={() => toast.dismiss()}>
+						logged in
+					</Link>
+				</p>
+			);
+			return;
+		} else if (isInCart) {
+			navigate('/cart', { replace: true });
+		} else {
+			mutation.mutate(courseId);
+			navigate('/cart');
+		}
 	};
 
 	return (
@@ -331,7 +400,7 @@ const CourseDetailPage = () => {
 
 					{/* RIGHT COLUMN: Course Buy Box / Sticky Sidebar */}
 					<div className="lg:col-span-1">
-						<div className="p-6 border border-gray-200 rounded-xl shadow-lg sticky top-20">
+						<div className="p-6 border border-gray-200 rounded-xl shadow-lg sticky top-10">
 							{/* Course Video/Image Thumbnail */}
 							<div className="mb-4 rounded-lg overflow-hidden">
 								<img
@@ -351,18 +420,16 @@ const CourseDetailPage = () => {
 								<button
 									onClick={() => handleAddToCartClick(courseId)}
 									disabled={buttonDisabled}
-									className="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 cursor-pointer disabled:cursor-not-allowed disabled:bg-blue-200 disabled:text-gray-700">
+									className="w-full py-3 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-900 transition duration-150 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-900 disabled:text-gray-300">
 									{buttonText}
 								</button>
-								<Link to={'/cart'}>
-									<button
-										className="w-full py-3 bg-white border border-blue-600 text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition duration-150"
-										onClick={() => {
-											if (!isInCart) mutation.mutate(courseId);
-										}}>
-										Buy Now
-									</button>
-								</Link>
+
+								<button
+									className="w-full py-3 bg-white border border-gray-900 text-gray-800 font-bold rounded-lg hover:bg-gray-50 transition duration-150 cursor-pointer disabled:cursor-not-allowed"
+									onClick={() => handleBuyNowClick(courseId)}
+									disabled={mutation.isPending}>
+									Buy Now
+								</button>
 							</div>
 
 							{/* Course Highlights */}
@@ -379,21 +446,18 @@ const CourseDetailPage = () => {
 							</div>
 
 							{/* Share Icons */}
-							<div className="mt-6 pt-4 border-t border-gray-200 flex justify-around">
+							<div className="mt-6 pt-4 border-t border-gray-200 flex justify-around items-center">
 								<p className="text-gray-500 font-medium">Share</p>
 								<div className="flex space-x-3">
-									<a href="#" className="text-blue-600 hover:text-blue-800">
-										<Star className="w-5 h-5" />
-									</a>
-									<a href="#" className="text-blue-600 hover:text-blue-800">
-										<Star className="w-5 h-5" />
-									</a>
-									<a href="#" className="text-blue-600 hover:text-blue-800">
-										<Star className="w-5 h-5" />
-									</a>
-									<a href="#" className="text-blue-600 hover:text-blue-800">
-										<Star className="w-5 h-5" />
-									</a>
+									{socialIcons.map(({ name, Icon, href }) => (
+										<Link
+											key={name}
+											href={href}
+											className={`flex items-center justify-center w-8 h-8 rounded-full bg-white hover:scale-125 transition duration-300`}
+											aria-label={Icon.name}>
+											<img src={Icon} alt={name} className={`size-6`} />
+										</Link>
+									))}
 								</div>
 							</div>
 						</div>

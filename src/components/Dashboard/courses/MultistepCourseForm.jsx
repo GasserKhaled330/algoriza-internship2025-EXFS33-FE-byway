@@ -7,13 +7,14 @@ import {
 	formDataAtom,
 	initialFormData,
 	selectedCourseIdAtom,
-	
 } from '../../../Atoms/courseAtoms';
 import Breadcrumbs from '../../Breadcrumbs';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import Course from '../../../api/Course';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import Spinner from '../../Common/Spinner';
 
 const MultistepCourseForm = ({ isViewMode, isEditMode }) => {
 	const navigate = useNavigate();
@@ -38,15 +39,18 @@ const MultistepCourseForm = ({ isViewMode, isEditMode }) => {
 	const courseMutation = useMutation({
 		mutationKey: ['saveCourse'],
 		mutationFn: (course) => Course.saveCourse(course),
-		onSuccess: () => {
-			reset();
-			queryClient.invalidateQueries(['Courses']);
-			if (isEditMode) alert('Course updated successfully!');
-			else alert('Course added successfully!');
+		onSuccess: async () => {
+			if (!isEditMode) reset();
+			await queryClient.invalidateQueries(['Courses']);
+			if (isEditMode) toast.success('Course updated successfully!');
+			else toast.success('Course added successfully!');
 		},
-		onError: (error) => {
-			console.error('Submission Error:', error);
-			alert(`Error: ${error.message}`);
+		onError: () => {
+			toast.error(
+				<p className="text-sm font-medium">
+					Failed to save course data. Try again later
+				</p>
+			);
 		},
 	});
 
@@ -94,10 +98,6 @@ const MultistepCourseForm = ({ isViewMode, isEditMode }) => {
 				}
 			}
 
-			for (const [key, value] of form.entries()) {
-				console.log(`${key} ${value}`);
-			}
-
 			if (isEditMode || (!isEditMode && !isViewMode)) {
 				courseMutation.mutate(form);
 			}
@@ -126,8 +126,6 @@ const MultistepCourseForm = ({ isViewMode, isEditMode }) => {
 			setCurrentStep(2);
 		}
 	};
-
-	const isSubmitting = courseMutation.isLoading;
 
 	return (
 		<div className="container mb-4">
@@ -163,7 +161,7 @@ const MultistepCourseForm = ({ isViewMode, isEditMode }) => {
 							onClick={() =>
 								currentStep === 1 ? navigate(-1) : setCurrentStep(1)
 							}
-							disabled={isSubmitting}>
+							disabled={courseMutation.isPending}>
 							{currentStep === 1 ? 'Cancel' : 'Back'}
 						</button>
 
@@ -172,15 +170,26 @@ const MultistepCourseForm = ({ isViewMode, isEditMode }) => {
 								type="button"
 								className="px-8 py-2 rounded-lg text-white bg-black hover:bg-gray-800 transition duration-150 cursor-pointer"
 								onClick={handleNext}
-								disabled={isSubmitting}>
+								disabled={courseMutation.isPending}>
 								Next
 							</button>
 						) : (
 							<button
 								type="submit"
 								className="px-8 py-2 rounded-lg text-white bg-black hover:bg-gray-800 transition duration-150 cursor-pointer disabled:cursor-not-allowed"
-								disabled={isViewMode || isSubmitting}>
-								{isSubmitting ? 'Adding...' : isEditMode ? 'Update' : 'Add'}
+								disabled={isViewMode || courseMutation.isPending}>
+								{courseMutation.isPending ? (
+									<p className="flex justify-center items-center">
+										<Spinner width={24} height={24} />
+										<span className="ml-2">
+											{isEditMode ? 'Updating...' : 'Adding...'}
+										</span>
+									</p>
+								) : isEditMode ? (
+									'Update'
+								) : (
+									'Add'
+								)}
 							</button>
 						)}
 					</div>

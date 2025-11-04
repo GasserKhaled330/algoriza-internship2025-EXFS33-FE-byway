@@ -9,16 +9,36 @@ const InstructorCard = ({ instructor, ITEM_WIDTH_PERCENT }) => {
 	const students = instructor?.students || 2400;
 	const imageUrl = instructor?.imagePath || 'placeholder-instructor.jpg'; // Replace with a real image path
 
+	const mapJobTitles = (title) => {
+		switch (title) {
+			case 'BackendDeveloper':
+				return 'Backend Developer';
+			case 'FrontendDeveloper':
+				return 'Frontend Developer';
+			case 'FullStackDeveloper':
+				return 'Full Stack Developer';
+			case 'UxUiDesigner':
+				return 'UI/UX Designer';
+			default:
+				return title;
+		}
+	};
+
 	return (
 		<div
-			className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex flex-col items-center flex-shrink-0"
+			className="h-full max-h-[400px] bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex flex-col items-center flex-shrink-0  transition duration-300 cursor-pointer hover:shadow-md hover:scale-95"
 			style={{
-				width: `calc(${ITEM_WIDTH_PERCENT}% - 1.5rem)`,
+				width: `calc(${ITEM_WIDTH_PERCENT}% - 1em)`,
 				minHeight: '280px',
 			}}>
 			{/* Instructor Image */}
-			<div className="rounded-lg mb-3">
-				<img src={imageUrl} alt={name} className="object-cover w-full h-full" />
+			<div className="mb-3">
+				<img
+					src={imageUrl}
+					alt={name}
+					className="w-xs h-full max-h-[256px] rounded shadow-lg"
+					loading="lazy"
+				/>
 			</div>
 
 			{/* Content */}
@@ -27,7 +47,7 @@ const InstructorCard = ({ instructor, ITEM_WIDTH_PERCENT }) => {
 				<h3 className="text-gray-900 font-bold text-lg mb-1">{name}</h3>
 
 				{/* Title */}
-				<p className="text-gray-500 text-sm mb-3">{title}</p>
+				<p className="text-gray-500 text-sm mb-3">{mapJobTitles(title)}</p>
 
 				{/* Rating and Students */}
 				<div className="flex justify-center items-center gap-4 text-sm">

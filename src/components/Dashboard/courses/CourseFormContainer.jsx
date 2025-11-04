@@ -10,6 +10,7 @@ import {
 	currentStepAtom,
 	formDataAtom,
 } from '../../../Atoms/courseAtoms';
+import Loader from '../../Common/Loader';
 
 const CourseFormContainer = () => {
 	const { courseId } = useParams();
@@ -52,7 +53,7 @@ const CourseFormContainer = () => {
 		};
 	}, [courseData, courseId, setFormData, setCourseId, setCurrentStep]);
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) return <Loader />;
 
 	return (
 		<MultistepCourseForm

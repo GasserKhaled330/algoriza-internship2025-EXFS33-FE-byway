@@ -1,4 +1,9 @@
 ﻿import { atom } from 'jotai';
+import Instructor from '../api/Instructor';
+
+export const instructorJobTitlesAtom = atom(
+	async () => await Instructor.getInstructorJobTitles()
+);
 
 export const pageIndexAtom = atom(1);
 export const pageSizeAtom = atom(5);
@@ -7,6 +12,7 @@ export const nameSearchAtom = atom('');
 export const jobTitleFilterAtom = atom('');
 
 export const selectedInstructorIdAtom = atom(null);
+export const selectedInstructorNameAtom = atom(null);
 
 export const showAddPopupAtom = atom(false);
 export const showViewPopupAtom = atom(false);

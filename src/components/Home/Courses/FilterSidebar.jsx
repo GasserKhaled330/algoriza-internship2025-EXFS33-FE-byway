@@ -4,31 +4,39 @@ import { useQuery } from '@tanstack/react-query';
 import {
 	courseFilterAtom,
 	updateCourseFilterAtom,
+	initialFilterState,
 } from '../../../Atoms/filterAtoms';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import Category from '../../../api/Category';
+import Loader from '../../Common/Loader';
 
-const FilterSection = ({ title, children, open = true }) => (
-	<div className="border-b border-gray-200 pb-6 mb-6">
-		<h3 className="flex justify-between items-center text-lg font-bold text-gray-900 mb-4 cursor-pointer">
-			{title}
-			<ChevronUp
-				className={`w-4 h-4 text-gray-500 ${
-					open ? '' : 'transform rotate-180'
-				}`}
-			/>
-		</h3>
-		<div className={`${open ? 'block' : 'hidden'}`}>{children}</div>
-	</div>
-);
+const FilterSection = ({ title, children }) => {
+	const [open, setOpen] = useState(true);
+	return (
+		<div className="border-b border-gray-200 pb-6 mb-6">
+			<h3 className="flex justify-between items-center text-lg font-bold text-gray-900 mb-4 cursor-pointer">
+				{title}
+				<button onClick={() => setOpen(!open)}>
+					<ChevronUp
+						className={`w-4 h-4 text-gray-500 ${
+							open ? '' : 'transform rotate-180'
+						}`}
+					/>
+				</button>
+			</h3>
+			<div className={`${open ? 'block' : 'hidden'}`}>{children}</div>
+		</div>
+	);
+};
 
 const FilterSidebar = () => {
-	const [open, setOpen] = useState(true);
-	const filters = useAtomValue(courseFilterAtom);
+	const [filters, setFilters] = useAtom(courseFilterAtom);
 	const updateFilter = useSetAtom(updateCourseFilterAtom);
-	const MAX_PRICE = 1000;
+	const MAX_PRICE = 2000;
 	const MIN_PRICE = 0;
-	const sliderValue = Number(filters.cost) || MIN_PRICE;
+	const [costSliderValue, setCostSliderValue] = useState(
+		Number(filters.cost) || MIN_PRICE
+	);
 	const lectureRanges = ['1-15', '16-30', '31-45', 'More than 45'];
 
 	const {
@@ -37,7 +45,8 @@ const FilterSidebar = () => {
 		isLoading,
 	} = useQuery({
 		queryKey: ['Categories'],
-		queryFn: Category.getCategories,
+		queryFn: () => Category.getCategories(),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const renderRatingStars = (count) => (
@@ -50,38 +59,46 @@ const FilterSidebar = () => {
 					}`}
 				/>
 			))}
+			<span>{count}+</span>
 		</div>
 	);
 
 	const handleRangeChange = (e) => {
-		updateFilter({ key: 'cost', value: Number(e.target.value) });
+		const { value } = e.target;
+		setCostSliderValue(Number(value)); // Update UI in real-time
+	};
+
+	const handleMouseUp = (e) => {
+		const { name, value } = e.target;
+		updateFilter({ key: name, value: Number(value) }); // Only call API here
 	};
 
 	const handleCategoryChange = (e) => {
-		console.log(e.target.value);
-		updateFilter({ key: 'category', value: e.target.value });
+		const { name, value } = e.target;
+		updateFilter({ key: name, value: value });
 	};
 
 	const handleRatingChange = (e) => {
-		updateFilter({ key: 'rating', value: e.target.value });
+		const { name, value } = e.target;
+		updateFilter({ key: name, value: value });
 	};
 
 	const handleLectureRangesChange = (e) => {
-		// console.log(e.target.value);
 		const { value } = e.target;
 		if (value === 'More than 45') {
-			updateFilter({ key: 'minLecturesCount', value: 45 });
+			updateFilter({ key: 'minLecturesCount', value: 46 });
 			updateFilter({ key: 'maxLecturesCount', value: '' });
 			return;
 		}
-		console.log(e.target.value);
 		const [minLecturesCount, maxLecturesCount] = value.split('-');
 		updateFilter({ key: 'minLecturesCount', value: minLecturesCount });
 		updateFilter({ key: 'maxLecturesCount', value: maxLecturesCount });
 	};
 
+	const handleFilterReset = () => setFilters(initialFilterState);
+
 	if (isLoading) {
-		return <div className="text-lg">Loading...</div>;
+		return <Loader />;
 	}
 
 	if (isError) {
@@ -95,11 +112,17 @@ const FilterSidebar = () => {
 	return (
 		<div className="w-full lg:w-64 p-4 bg-white rounded-xl shadow-md">
 			{/* Filter Header */}
-			<div className="flex items-center space-x-2 mb-6 text-gray-900">
-				<button className="cursor-pointer" onClick={() => setOpen(!open)}>
+			<div className="flex items-center justify-between space-x-2 mb-6 text-gray-900">
+				<div className="flex items-center">
 					<SlidersHorizontal className="w-5 h-5" />
+					<h3 className="font-semibold text-lg">Filter</h3>
+				</div>
+				<button
+					onClick={handleFilterReset}
+					title="Clear all chosen filters"
+					className="text-sm text-blue-500 font-medium cursor-pointer transiation duration-300 hover:text-bule-600 hover:underline">
+					Clear
 				</button>
-				<h3 className="font-semibold text-lg">Filter</h3>
 			</div>
 
 			{/* Rating Filter */}
@@ -136,9 +159,11 @@ const FilterSidebar = () => {
 								value={range}
 								checked={
 									`${
-										filters.maxLecturesCount
+										filters.maxLecturesCount && filters.minLecturesCount
 											? `${filters.minLecturesCount}-${filters.maxLecturesCount}`
-											: 'More than 45'
+											: filters.minLecturesCount
+											? 'More than 45'
+											: ''
 									}` === range
 								}
 								onChange={handleLectureRangesChange}
@@ -154,20 +179,23 @@ const FilterSidebar = () => {
 			<FilterSection title="Price" open={open}>
 				{/* Placeholder for a custom range slider */}
 				<div className="text-center font-bold text-lg mb-3 text-blue-600">
-					${sliderValue}
+					${costSliderValue}
 				</div>
 				<div className="py-4">
 					<input
 						type="range"
+						name="cost"
+						id="cost"
 						min={MIN_PRICE}
 						max={MAX_PRICE}
-						value={sliderValue}
+						value={costSliderValue}
 						onChange={handleRangeChange}
+						onMouseUp={handleMouseUp}
 						className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
 					/>
 					<div className="flex justify-between text-xs text-gray-500 mt-2">
-						<span>{MIN_PRICE}</span>
-						<span>{MAX_PRICE}</span>
+						<span>${MIN_PRICE}</span>
+						<span>${MAX_PRICE}</span>
 					</div>
 				</div>
 			</FilterSection>

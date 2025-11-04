@@ -1,5 +1,6 @@
 import React from 'react';
 import BannerImage from '/banner-img.webp';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
 	return (
@@ -15,9 +16,11 @@ const Hero = () => {
 					here to guide you on your journey to success.
 				</p>
 				<div>
-					<button className="min-w-[170px] bg-[#3B82F6] text-white text-sm font-medium p-2 rounded-md cursor-pointer">
-						Start your journy
-					</button>
+					<Link to="/courses">
+						<button className="min-w-[170px] bg-[#3B82F6] text-white text-sm font-medium p-2 rounded-md cursor-pointer transation duration-300 hover:scale-105">
+							Start your journy
+						</button>
+					</Link>
 				</div>
 			</div>
 			<div>

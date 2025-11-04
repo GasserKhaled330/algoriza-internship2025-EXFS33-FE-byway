@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Cart from '../api/Cart';
-import { CreditCard, Zap } from 'lucide-react';
+import { CreditCard, Loader, Zap } from 'lucide-react';
 import Checkout from '../api/Checkout';
+import toast from 'react-hot-toast';
+import Spinner from '../components/Common/Spinner';
 
 const validateForm = (formData) => {
 	const errors = {};
@@ -48,23 +50,29 @@ const CheckoutPage = () => {
 		isError: isCartError,
 	} = useQuery({
 		queryKey: ['cartItems'],
-		queryFn: Cart.getCartItems,
+		queryFn: () => Cart.getCartItems(),
 	});
 
 	const queryClient = useQueryClient();
 
 	const checkoutMutation = useMutation({
 		mutationKey: ['checkout', 'process'],
-		mutationFn: Checkout.processCheckout,
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['cartItems'] });
-			queryClient.invalidateQueries({ queryKey: ['cartCount'] });
-			alert('Checkout successful!');
+		mutationFn: () => Checkout.processCheckout(),
+		onSuccess: async () => {
+			await Promise.all([
+				queryClient.invalidateQueries({ queryKey: ['cartItems'] }),
+				queryClient.invalidateQueries({ queryKey: ['cartCount'] }),
+			]);
+			toast.success('Checkout successful!!!', { position: 'top-center' });
 			navigate('/order-confirmation');
 		},
 		onError: (error) => {
-			console.error('Checkout failed:', error);
-			alert('Checkout failed. Please check your details.');
+			toast.error(
+				<p className="text-sm font-medium">
+					{error?.response.data.detail ||
+						'Checkout failed, Please check your details.'}
+				</p>
+			);
 		},
 	});
 
@@ -90,12 +98,14 @@ const CheckoutPage = () => {
 		checkoutMutation.mutate();
 	};
 
-	if (isCartLoading)
-		return <div className="text-center py-20">Loading cart details...</div>;
-	if (isCartError)
-		return (
-			<div className="text-center py-20 text-red-600">Error loading cart.</div>
+	if (isCartLoading) {
+		return <Loader />;
+	}
+	if (isCartError) {
+		toast.error(
+			<p className="text-sm font-medium">Failed to load cart items.</p>
 		);
+	}
 	if (!cartData || cartData.length === 0) {
 		return (
 			<div className="bg-gray-50 text-center py-20">
@@ -120,18 +130,18 @@ const CheckoutPage = () => {
 			<div className="container mx-auto px-4 py-8">
 				{/* Breadcrumbs */}
 				<div className="text-sm text-gray-500 mb-8">
-					<Link to="/" className="hover:text-blue-600">
-						Details
-					</Link>{' '}
+					<Link to="/courses" className="hover:text-blue-600 mr-1">
+						Courses
+					</Link>
 					&gt;
-					<Link to="/cart" className="hover:text-blue-600">
+					<Link to="/cart" className="hover:text-blue-600 mx-1">
 						Shopping Cart
-					</Link>{' '}
+					</Link>
 					&gt;
-					<span className="text-gray-900 font-medium">Checkout</span>
+					<span className="text-gray-900 font-medium ml-1">Checkout</span>
 				</div>
 
-				<h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout Page</h1>
+				<h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
 
 				{/* --- Form Element --- */}
 				<form
@@ -335,8 +345,15 @@ const OrderSummary = ({ cartItems, subtotal, tax, total, isProcessing }) => (
 			type="submit"
 			form="checkout-form"
 			disabled={isProcessing}
-			className="w-full py-3 bg-gray-900 text-white font-bold rounded-lg cursor-pointer hover:bg-gray-700 transition duration-150 disabled:bg-blue-300 disabled:cursor-not-allowed">
-			{isProcessing ? 'Processing...' : 'Proceed to Checkout'}
+			className="w-full py-3 bg-gray-900 text-white font-bold rounded-lg cursor-pointer hover:bg-gray-700 transition duration-150 disabled:bg-gray-700 disabled:cursor-not-allowed">
+			{isProcessing ? (
+				<p className="flex justify-center items-center">
+					<Spinner width={24} height={24} />
+					<span className="ml-2">Processing...</span>
+				</p>
+			) : (
+				'Proceed to Checkout'
+			)}
 		</button>
 	</div>
 );

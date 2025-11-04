@@ -1,18 +1,29 @@
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Cart from '../../api/Cart';
+import toast from 'react-hot-toast';
 
 const CartItem = ({ item }) => {
 	const queryClient = useQueryClient();
 
 	const removeMutation = useMutation({
 		mutationFn: Cart.removeCartItem,
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['cartItems'] });
-			queryClient.invalidateQueries({ queryKey: ['cartCount'] });
+		onSuccess: async () => {
+			await Promise.all([
+				queryClient.invalidateQueries({ queryKey: ['cartItems'] }),
+				queryClient.invalidateQueries({ queryKey: ['cartCount'] }),
+				queryClient.invalidateQueries({
+					queryKey: ['Cart', 'itemStatus', item.courseId],
+				}),
+			]);
 		},
-		onError: (error) => {
-			console.error('Failed to remove item:', error);
+		onError: () => {
+			toast.error(
+				<p className="text-sm text-gray-900">
+					Failed to remove course
+					<span className="font-medium mx-1">{item.name}</span> from cart.
+				</p>
+			);
 		},
 	});
 
@@ -23,12 +34,12 @@ const CartItem = ({ item }) => {
 	};
 
 	return (
-		<div className="flex p-4 border border-blue-500 rounded-lg shadow-sm mb-4 bg-white last:mb-0">
-			<div className="w-24 h-24 flex-shrink-0 mr-4 rounded-md overflow-hidden">
+		<div className="flex p-4 border border-gray-400 rounded-lg shadow-sm mb-4 bg-white last:mb-0">
+			<div className="w-28 h-28 flex-shrink-0 mr-4 rounded-md overflow-hidden">
 				<img
 					src={item.imagePath}
 					alt={item.name}
-					className="w-full h-full object-cover"
+					className="w-full h-full object-fill"
 				/>
 			</div>
 
@@ -42,8 +53,8 @@ const CartItem = ({ item }) => {
 					<p className="text-sm text-gray-600 mb-2">By {item.instructorName}</p>
 
 					<p className="text-gray-500 mb-2">
-						{item.totalHours} Total Hours. {item.lecturesCount} Lectures.
-						{item.level} level
+						{item.totalHours} Total Hours. {item.lecturesCount} Lectures.{' '}
+						<strong>{item.level}</strong>
 					</p>
 
 					<div className="flex items-center text-sm mb-2">

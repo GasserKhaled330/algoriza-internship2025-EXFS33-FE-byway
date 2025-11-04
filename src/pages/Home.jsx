@@ -6,7 +6,7 @@ import Footer from '../components/Home/Footer.jsx';
 const Home = () => {
 	return (
 		<>
-			<div className="min-h-screen">
+			<div className="flex flex-col min-h-screen">
 				<Navbar />
 				<Outlet />
 				<Footer />

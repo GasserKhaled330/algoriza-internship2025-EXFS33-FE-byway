@@ -2,7 +2,6 @@
 
 const register = async (newUser) => {
 	const response = await axiosInstance.post('/auth/register', newUser);
-	console.log(response.data);
 	return response.data;
 };
 

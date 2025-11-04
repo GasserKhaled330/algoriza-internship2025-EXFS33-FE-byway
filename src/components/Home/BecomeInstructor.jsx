@@ -10,7 +10,7 @@ const BecomeInstructor = () => {
 					<img
 						src={BecomeInstructorImage}
 						alt="Instructor smiling"
-						className="w-[300px] h-auto max-w-full"
+						className="w-[400px] h-auto max-w-full"
 					/>
 				</div>
 

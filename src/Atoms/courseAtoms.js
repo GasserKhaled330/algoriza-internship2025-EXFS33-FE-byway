@@ -21,6 +21,8 @@ export const updateCourseFilterAtom = atom(null, (get, set, { key, value }) => {
 });
 
 export const selectedCourseIdAtom = atom(null);
+export const selectedCourseNameAtom = atom(null);
+
 export const showDeleteCoursePopupAtom = atom(false);
 export const closeDeletePopupAtom = atom(null, (get, set) => {
 	set(showDeleteCoursePopupAtom, false);

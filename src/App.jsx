@@ -19,8 +19,16 @@ import OrderConfirmationPage from './pages/OrderConfirmationPage.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
 import MultistepCourseForm from './components/Dashboard/courses/MultistepCourseForm.jsx';
 import CourseFormContainer from './components/Dashboard/courses/CourseFormContainer.jsx';
+import { Toaster } from 'react-hot-toast';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 1000 * 30, // Default stale time of 30 seconds
+			gcTime: 1000 * 60 * 60, // Default cache time of 1 hour
+		},
+	},
+});
 
 function App() {
 	return (
@@ -72,6 +80,7 @@ function App() {
 						</Route>
 						<Route path="*" element={<NotFound />} />
 					</Routes>
+					<Toaster position="top-right" reverseOrder={false} />
 				</BrowserRouter>
 			</QueryClientProvider>
 		</>

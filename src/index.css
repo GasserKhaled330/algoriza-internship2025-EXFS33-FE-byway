@@ -3,10 +3,7 @@
 html {
 	@apply scroll-smooth;
 }
-img {
-	height: auto;
-	max-width: 100%;
-}
+
 body {
 	overflow-x: hidden;
 }
@@ -94,11 +91,11 @@ select:open::picker-icon {
 /* Popups */
 
 .popup-overlay {
-	@apply fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.5)] flex justify-center items-center z-10;
+	@apply fixed top-0 left-0 right-0 bottom-0 w-full h-full bg-[rgba(0,0,0,0.5)] overflow-auto flex justify-center items-center z-10;
 }
 
 .popup-content {
-	@apply flex flex-col justify-center items-center bg-white p-5 rounded-lg shadow-md relative max-w-[500px] w-11/12;
+	@apply flex flex-col bg-white p-5 mt-8 mb-4 rounded-lg shadow-md relative  max-w-[500px] w-[90%];
 }
 
 .close-button {

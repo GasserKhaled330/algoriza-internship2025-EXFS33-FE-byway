@@ -2,10 +2,11 @@
 import { BellDot, User, NotebookText, Folders, Calendar } from 'lucide-react';
 import SubscriptionLineChart from './SubscriptionLineChart.jsx';
 import EntityPieChart from './EntityPieChart.jsx';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import Category from '../../../api/Category.js';
 import Instructor from '../../../api/Instructor.js';
 import Course from '../../../api/Course.js';
+import Loader from '../../Common/Loader.jsx';
 
 const Statistics = () => {
 	const subscriptionData = [
@@ -23,20 +24,34 @@ const Statistics = () => {
 		{ month: 'Dec', deposit: 400, withdraw: 350 },
 	];
 
-	const { data: categories } = useQuery({
-		queryKey: ['Categories'],
-		queryFn: Category.getCategories,
+	const results = useQueries({
+		queries: [
+			{
+				queryKey: ['categories'],
+				queryFn: () => Category.getCategories(),
+				gcTime: 1000 * 60 * 10,
+			},
+			{
+				queryKey: ['instructors', 'count'],
+				queryFn: () => Instructor.getInstructorsCount(),
+				staleTime: 1000 * 60,
+			},
+			{
+				queryKey: ['courses', 'count'],
+				queryFn: () => Course.getCoursesCount(),
+				staleTime: 1000 * 60,
+			},
+		],
 	});
 
-	const { data: instructorsCount } = useQuery({
-		queryKey: ['Instructors', 'count'],
-		queryFn: Instructor.getInstructorsCount,
-	});
+	const isLoading = results.some((query) => query.isLoading);
 
-	const { data: coursesCount } = useQuery({
-		queryKey: ['Courses', 'count'],
-		queryFn: Course.getCoursesCount,
-	});
+	if (isLoading) return <Loader width={100} height={100} />;
+
+	const [categoriesQuery, instructorsQuery, coursesQuery] = results;
+	const categories = categoriesQuery.data;
+	const instructorsCount = instructorsQuery.data;
+	const coursesCount = coursesQuery.data;
 
 	const entityCounts = {
 		instructors: instructorsCount,
@@ -45,8 +60,8 @@ const Statistics = () => {
 	};
 
 	return (
-		<div className="container">
-			<header className="flex justify-between items-center border-b-1 border-[#E2E6EE]  h-24">
+		<div className="container pb-4">
+			<header className="flex justify-between items-center border-b-1 border-[#E2E6EE] h-24">
 				<h1 className="text-3xl font-medium">Dashboard</h1>
 				<span className="cursor-pointer">
 					<BellDot size={24} />
@@ -57,7 +72,7 @@ const Statistics = () => {
 				<section className="grid grid-cols-3 gap-5">
 					<div className="flex flex-col justify-between drop-shadow-md bg-[#FFFFFF] rounded-2xl px-6 py-4">
 						<div className="flex justify-between">
-							<p className="text-3xl font-bold">{instructorsCount}</p>
+							<p className="text-3xl font-bold">{entityCounts.instructors}</p>
 							<span className="flex justify-center items-center w-10 h-10 bg-sky-100 rounded-md">
 								<User color="#647FBC" size={30} />
 							</span>
@@ -66,7 +81,7 @@ const Statistics = () => {
 					</div>
 					<div className="flex flex-col justify-between drop-shadow-md bg-[#FFFFFF] rounded-2xl px-6 py-4">
 						<div className="flex justify-between">
-							<p className="text-3xl font-bold">{categories?.length}</p>
+							<p className="text-3xl font-bold">{entityCounts.categories}</p>
 							<span className="flex justify-center items-center w-10 h-10 bg-sky-100 rounded-md">
 								<NotebookText color="#647FBC" size={30} />
 							</span>
@@ -75,7 +90,7 @@ const Statistics = () => {
 					</div>
 					<div className="flex flex-col justify-between drop-shadow-md bg-[#FFFFFF] rounded-2xl px-6 py-4">
 						<div className="flex justify-between">
-							<p className="text-3xl font-bold">{coursesCount}</p>
+							<p className="text-3xl font-bold">{entityCounts.courses}</p>
 							<span className="flex justify-center items-center w-10 h-10 bg-sky-100 rounded-md">
 								<Folders color="#647FBC" size={30} />
 							</span>

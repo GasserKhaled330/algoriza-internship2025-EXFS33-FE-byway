@@ -1,16 +1,18 @@
 ﻿import React from 'react';
 
-const SearchBar = ({ onSearch, placeHolder, value }) => {
+const SearchBar = ({ onSearch, placeHolder, value, isNumber }) => {
 	return (
-		<div>
+		<div className="min-w-[200px]">
 			<input
-				type="search"
+				type={isNumber ? 'number' : 'search'}
 				id="searchTerm"
 				name="searchTerm"
 				placeholder={placeHolder}
 				value={value}
 				onChange={onSearch}
-				className="grow shrink w-full text-[#96A0B6] text-sm font-medium  p-2 border-1 border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-500"
+				min={1}
+				max={5}
+				className="w-full text-[#96A0B6] text-sm font-medium  p-2 border-1 border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-500"
 			/>
 		</div>
 	);

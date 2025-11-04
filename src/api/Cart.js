@@ -11,7 +11,6 @@ const getCartItemsCount = async () => {
 };
 
 const removeCartItem = async (courseId) => {
-	console.log(courseId);
 	const response = await axiosInstance.delete(`/Cart/${courseId}`);
 	return response.data;
 };

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Loader } from 'lucide-react';
 import CartItem from '../components/Cart/CartItem';
 import { useQuery } from '@tanstack/react-query';
 import Cart from '../api/Cart';
+import toast from 'react-hot-toast';
 
 const ShoppingCartPage = () => {
 	const {
@@ -12,15 +13,18 @@ const ShoppingCartPage = () => {
 		isError,
 	} = useQuery({
 		queryKey: ['cartItems'],
-		queryFn: Cart.getCartItems,
+		queryFn: () => Cart.getCartItems(),
 		staleTime: 5 * 60 * 1000,
 	});
 
-	if (isLoading) return <div className="p-10 text-center">Loading cart...</div>;
-	if (isError)
-		return (
-			<div className="p-10 text-center text-red-600">Error loading cart.</div>
+	if (isLoading) {
+		return <Loader />;
+	}
+	if (isError) {
+		toast.error(
+			<p className="text-sm font-medium">Failed to load cart items.</p>
 		);
+	}
 
 	const cartCount = cartItems?.length || 0;
 
@@ -60,11 +64,8 @@ const ShoppingCartPage = () => {
 				{/* --- Main Content Grid --- */}
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 					{/* LEFT COLUMN: Cart Items */}
-					<div className="lg:col-span-2">
-						<h2 className="text-xl font-semibold text-gray-700 mb-4">
-							{cartCount} Courses in cart
-						</h2>
-
+					<div
+						className={`lg:col-span-2 ${cartCount === 0 && 'lg:col-span-3'}`}>
 						{cartCount === 0 ? (
 							<div className="p-10 text-center text-gray-500 border border-dashed rounded-lg bg-white">
 								Your cart is empty.{' '}
@@ -75,37 +76,45 @@ const ShoppingCartPage = () => {
 								</Link>
 							</div>
 						) : (
-							<div className="space-y-4">
-								{cartItems.map((item) => (
-									<CartItem key={item.courseId} item={item} />
-								))}
-							</div>
+							<>
+								<h2 className="text-xl font-semibold text-gray-700 mb-4">
+									{cartCount} Courses in cart
+								</h2>
+								<div className="space-y-4">
+									{cartItems.map((item) => (
+										<CartItem key={item.courseId} item={item} />
+									))}
+								</div>
+							</>
 						)}
 					</div>
-
 					{/* RIGHT COLUMN: Order Details */}
-					<div className="lg:col-span-1">
-						<div className="sticky top-8 p-6 bg-white rounded-xl shadow-lg border border-gray-100">
-							<h3 className="text-xl font-bold text-gray-900 mb-4 border-b pb-3">
-								Order Details
-							</h3>
+					{cartCount > 0 && (
+						<>
+							<div className="lg:col-span-1">
+								<div className="sticky top-8 p-6 bg-white rounded-xl shadow-lg border border-gray-100">
+									<h3 className="text-xl font-bold text-gray-900 mb-4 border-b pb-3">
+										Order Details
+									</h3>
 
-							{/* Detail Rows */}
-							<DetailRow label="Price" value={subtotal} />
-							<DetailRow label="Discount" value={discount} />
-							<DetailRow label="Tax" value={tax} />
-							<DetailRow label="Total" value={total} isTotal={true} />
+									{/* Detail Rows */}
+									<DetailRow label="Price" value={subtotal} />
+									<DetailRow label="Discount" value={discount} />
+									<DetailRow label="Tax" value={tax} />
+									<DetailRow label="Total" value={total} isTotal={true} />
 
-							{/* Checkout Button */}
-							<Link to="/checkout">
-								<button
-									className="w-full py-3 mt-6 bg-gray-900 text-white font-bold rounded-lg shadow-md transition duration-150 hover:bg-gray-700 cursor-pointer"
-									disabled={cartCount === 0}>
-									Proceed to Checkout
-								</button>
-							</Link>
-						</div>
-					</div>
+									{/* Checkout Button */}
+									<Link to="/checkout">
+										<button
+											className="w-full py-3 mt-6 bg-gray-900 text-white font-bold rounded-lg shadow-md transition duration-150 hover:bg-gray-700 cursor-pointer"
+											disabled={cartCount === 0}>
+											Proceed to Checkout
+										</button>
+									</Link>
+								</div>
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 		</div>

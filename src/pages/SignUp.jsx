@@ -6,6 +6,8 @@ import { setAuthAtom } from '../Atoms/authAtoms.js';
 import { useSetAtom } from 'jotai';
 import { useMutation } from '@tanstack/react-query';
 import auth from '../api/auth.js';
+import toast from 'react-hot-toast';
+import Spinner from '../components/Common/Spinner.jsx';
 
 const SignUp = () => {
 	const [firstName, setFirstName] = useState('');
@@ -44,11 +46,21 @@ const SignUp = () => {
 			});
 			reset();
 			navigate('/');
-			console.log('user created successfully');
+			toast.success(
+				<p className="text-sm font-medium">
+					Your account created successfully!!!.
+					<br /> check your email.
+				</p>
+			);
 		},
-		onError: (err) => {
-			console.error(`Create User Failed: ${err.message}`);
-			console.error(`Create User Failed: ${err.response?.data}`);
+		onError: (error) => {
+			console.log(error);
+			toast.error(
+				<p className="text-sm font-medium">
+					{error?.response.data ||
+						'Register failed. Please check your credentials.'}
+				</p>
+			);
 		},
 	});
 
@@ -59,7 +71,6 @@ const SignUp = () => {
 			document.getElementById('error-result').textContent =
 				'The password and confirmation password do not match.';
 		} else {
-			console.log(firstName);
 			mutation.mutate({
 				firstName,
 				lastName,
@@ -71,10 +82,8 @@ const SignUp = () => {
 		}
 	};
 
-	console.log(mutation.error);
-
 	return (
-		<div className="grid grid-cols-1  md:grid-cols-2">
+		<div className="min-h-175 grid grid-cols-1  md:grid-cols-2">
 			<img
 				src={SignupImg}
 				alt="welcome signup image"
@@ -82,9 +91,11 @@ const SignUp = () => {
 			/>
 
 			{/* sign up form */}
-			<form className="p-5" onSubmit={HandleFormSubmit}>
+			<form
+				className="flex flex-col justify-center  p-5"
+				onSubmit={HandleFormSubmit}>
 				{/* header */}
-				<h2 className="text-center text-2xl font-bold mb-4">
+				<h2 className="text-center text-2xl font-bold mb-8">
 					Create Your Account
 				</h2>
 				{/* sign up form */}
@@ -209,21 +220,21 @@ const SignUp = () => {
 						</div>
 					</div>
 					{/* create account button */}
-					<div className="mb-2">
+					<div className="flex items-center mb-2">
 						<button
 							type="submit"
 							className="flex w-1/3 justify-center items-center rounded-md bg-gray-950 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs cursor-pointer hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
-							Create Account
-							<ArrowRight strokeWidth={3} size={18} className="ml-2" />
+							{mutation.isPending ? (
+								<p className="flex justify-center items-center">
+									<Spinner width={20} height={20} />
+									<span className="ml-2">Create Account</span>
+								</p>
+							) : (
+								'Create Account'
+							)}
+							<ArrowRight strokeWidth={3} size={16} className="ml-2" />
 						</button>
 					</div>
-					{mutation.isError && (
-						<p
-							className="bg-red-100 text-red-800 p-2 rounded-md"
-							id="error-result">
-							{mutation.error.response?.data}
-						</p>
-					)}
 				</div>
 				{/* social media */}
 				<div>

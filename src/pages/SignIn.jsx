@@ -4,19 +4,19 @@ import { setAuthAtom } from '../Atoms/authAtoms.js';
 import auth from '../api/auth.js';
 import { useNavigate } from 'react-router-dom';
 import loginImage from '../assets/admin-login.webp';
+import toast from 'react-hot-toast';
+import { useMutation } from '@tanstack/react-query';
+import Spinner from '../components/Common/Spinner.jsx';
 
 const SignIn = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [error, setError] = useState(null);
 	const setAuth = useSetAtom(setAuthAtom);
 	const navigate = useNavigate();
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		setError(null);
-		try {
-			const response = await auth.login(email, password);
+	const loginMutation = useMutation({
+		mutationFn: ({ email, password }) => auth.login(email, password),
+		onSuccess: (response) => {
 			const { token, userId, userName, isAuthenticated, roles, expiresOn } =
 				response;
 			const data = {
@@ -34,12 +34,19 @@ const SignIn = () => {
 					navigate('/');
 				}
 			}
-		} catch (err) {
-			console.error('Login failed:', err);
-			setError(
-				err.response?.data || 'Login failed. Please check your credentials.'
+		},
+		onError: (error) => {
+			toast.error(
+				<p className="text-sm font-medium">
+					{error.response?.data ||
+						'Login failed. Please check your credentials.'}
+				</p>
 			);
-		}
+		},
+	});
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		loginMutation.mutate({ email, password });
 	};
 	return (
 		<>
@@ -88,11 +95,15 @@ const SignIn = () => {
 									<button
 										type="submit"
 										className="flex w-1/3 justify-center rounded-md bg-gray-950 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs cursor-pointer hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
-										Sign In
+										{loginMutation.isPending ? (
+											<p className="flex justify-center items-center">
+												<Spinner width={20} height={20} />
+												<span className="ml-2">Sign In</span>
+											</p>
+										) : (
+											'Sign In'
+										)}
 									</button>
-									{error && (
-										<p className="mt-4 text-sm text-red-600">{error}</p>
-									)}
 								</form>
 							</div>
 							<div className="mt-6 max-w-full">

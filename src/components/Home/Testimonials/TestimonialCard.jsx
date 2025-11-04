@@ -9,7 +9,7 @@ const TestimonialCard = ({ testimonial, ITEM_WIDTH_PERCENT }) => {
 
 	return (
 		<div
-			className="bg-white rounded-xl shadow-md border border-gray-100 p-6 flex flex-col justify-between flex-shrink-0 w-full"
+			className="bg-white rounded-xl shadow-md border border-gray-100 p-6 flex flex-col justify-between flex-shrink-0 w-full  transition duration-300 cursor-pointer hover:shadow-md hover:scale-95"
 			style={{
 				width: `calc(${ITEM_WIDTH_PERCENT}% - 1.5rem)`,
 				minHeight: '280px',

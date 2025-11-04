@@ -13,7 +13,8 @@ const Categories = () => {
 
 	const { data } = useQuery({
 		queryKey: ['Categories'],
-		queryFn: Category.getCategories,
+		queryFn: () => Category.getCategories(),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const itemCount = data?.length || 0;
@@ -36,7 +37,7 @@ const Categories = () => {
 	const TRACK_WIDTH_PERCENT = (itemCount / ITEMS_TO_SHOW) * 100;
 
 	return (
-		<section className="mx-auto py-12 px-4">
+		<section className="py-12 px-4">
 			<div className="flex justify-between items-center mb-6">
 				<h2 className="text-[#0F172A] font-bold text-2xl">Top Categories</h2>
 				<div className="flex gap-3">

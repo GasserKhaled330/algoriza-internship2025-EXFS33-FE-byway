@@ -6,7 +6,6 @@ import InstructorsList from './InstructorsList.jsx';
 import Instructor from '../../../api/Instructor.js';
 import Pagination from '../../Pagination.jsx';
 import AddInstructorForm from './AddInstructorForm.jsx';
-
 import { useDebounce } from '../../../hooks/useDebounce.js';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
@@ -17,10 +16,14 @@ import {
 	jobTitleFilterAtom,
 	showAddPopupAtom,
 	closeAllPopupsAtom,
+	instructorJobTitlesAtom,
 } from '../../../Atoms/instructorAtoms.js';
+import Loader from '../../Common/Loader.jsx';
+import toast from 'react-hot-toast';
 
 const Instructors = () => {
 	const tableColName = ['Name', 'Job Title', 'Rate', 'Action'];
+	const jobTitles = useAtomValue(instructorJobTitlesAtom);
 	const setShowPopup = useSetAtom(showAddPopupAtom);
 	const closeAllPopups = useSetAtom(closeAllPopupsAtom);
 
@@ -34,7 +37,6 @@ const Instructors = () => {
 	const {
 		isPending,
 		isError,
-		error,
 		data: instructors,
 		isFetching,
 		isPlaceholderData,
@@ -54,11 +56,7 @@ const Instructors = () => {
 				jobTitle
 			),
 		placeholderData: keepPreviousData,
-	});
-
-	const { data: jobTitles } = useQuery({
-		queryKey: ['instructor', 'jobTitles'],
-		queryFn: Instructor.getInstructorJobTitles,
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const totalPages = Math.ceil((instructors?.totalCount || 0) / pageSize);
@@ -76,8 +74,15 @@ const Instructors = () => {
 	const handleOpenPopup = () => setShowPopup(true);
 	const handleClosePopup = closeAllPopups;
 
+	if (isError) {
+		toast.error(
+			<p className="text-sm font-medium">
+				An error occured while fetching instructors data, try later agian
+			</p>
+		);
+	}
 	return (
-		<div className="container">
+		<div className="px-4">
 			<header className="flex justify-between items-center border-b-1 border-[#E2E6EE] h-24">
 				<div className="flex items-end">
 					<h1 className="text-3xl font-medium">Instructors</h1>
@@ -94,7 +99,7 @@ const Instructors = () => {
 					<div className="flex items-center">
 						<button
 							onClick={handleOpenPopup}
-							className="bg-[#020617] text-white p-2 rounded-xl cursor-pointer text-nowrap">
+							className="bg-gray-800 text-white px-3 py-1 rounded cursor-pointer text-nowrap transition duration-300 hover:bg-gray-950">
 							Add Instructor
 						</button>
 
@@ -103,7 +108,7 @@ const Instructors = () => {
 							id="jobTitle"
 							value={jobTitle}
 							onChange={handleJobTitleChange}
-							className="w-[200px] bg-gray-100 text-[#3962DC] text-sm font-medium cursor-pointer p-2 mx-2 bordder-[#ccc] rounded-md hover:border-[#999] focus:outline-none focus:border-[#007bff] focus:shadow-md">
+							className="min-w-[175px] bg-gray-100 text-sm font-medium cursor-pointer p-2 mx-2 bordder-[#ccc] rounded-md hover:border-[#999] focus:outline-none focus:border-[#007bff] focus:shadow-md">
 							<option
 								value=""
 								className="bg-white text-[#333]  text-sm font-medium cursor-pointer hover:bg-[#eee]">
@@ -132,8 +137,8 @@ const Instructors = () => {
 				</div>
 
 				<div>
-					{isPending ? (
-						<p>Loading... </p>
+					{isPending || isFetching ? (
+						<Loader width={80} height={80} />
 					) : (
 						<InstructorsList
 							columns={tableColName}
@@ -143,7 +148,7 @@ const Instructors = () => {
 				</div>
 
 				<div>
-					{isError ? null : (
+					{!isError && (
 						<Pagination
 							isPlaceholderData={isPlaceholderData}
 							totalPages={totalPages}
@@ -153,13 +158,6 @@ const Instructors = () => {
 			</section>
 
 			<AddInstructorForm onClose={handleClosePopup} />
-
-			{isFetching && <span>Loading...</span>}
-			{isError && (
-				<p className="mt-4 text-sm text-red-600">
-					Error: {JSON.stringify(error.response.data.errors) || error.message}
-				</p>
-			)}
 		</div>
 	);
 };

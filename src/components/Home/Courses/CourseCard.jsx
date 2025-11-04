@@ -13,11 +13,11 @@ const CourseCard = ({ course }) => {
 	const instructor = course?.instructorName || 'Ronald Richards';
 	const hours = course?.totalHours || 22;
 	const lectures = totalLectures || 155;
-	const price = course?.cost || 45.0;
+	const cost = course?.cost || 45.0;
 	const tag = course?.categoryName || 'UI/UX Design';
 	const imageUrl = course?.imagePath;
 	const rate = course?.rate || 5;
-
+	const level = course?.level || 'Beginner';
 	// Helper function to render star icons
 	const renderStars = (rating = 5) => {
 		return Array.from({ length: 5 }, (_, index) => (
@@ -33,17 +33,18 @@ const CourseCard = ({ course }) => {
 	return (
 		<Link
 			to={`/courses/${course.id}`}
-			className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition duration-300 cursor-pointer">
+			className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-400  transition duration-300 cursor-pointer hover:shadow-lg hover:scale-105">
 			<div className="relative h-40 overflow-hidden">
-				<div className="absolute inset-0 bg-gray-300 flex items-center justify-center text-gray-600 text-sm">
+				<div className="absolute inset-0 bg-gray-200">
 					<img
 						src={imageUrl}
 						alt={title}
 						className="w-full h-full object-cover"
+						loading="lazy"
 					/>
 				</div>
 
-				<span className="absolute top-4 left-4 bg-white text-gray-800 text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+				<span className="absolute top-4 left-2 bg-white text-gray-800 text-xs font-semibold px-3 py-1 rounded-full shadow-md">
 					{tag}
 				</span>
 			</div>
@@ -65,11 +66,11 @@ const CourseCard = ({ course }) => {
 
 				{/* Details */}
 				<p className="text-gray-500 text-xs mb-3">
-					{hours} Total Hours. {lectures} Lectures. Beginner
+					{hours} Total Hours. {lectures} Lectures. {level}
 				</p>
 
 				{/* Price */}
-				<p className="text-gray-900 font-bold text-xl">${price.toFixed(2)}</p>
+				<p className="text-gray-900 font-bold text-xl">${cost.toFixed(2)}</p>
 			</div>
 		</Link>
 	);

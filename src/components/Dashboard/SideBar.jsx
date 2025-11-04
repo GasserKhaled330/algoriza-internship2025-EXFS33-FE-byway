@@ -24,7 +24,7 @@ const SideBar = () => {
 
 	return (
 		<>
-			<aside className="flex flex-col bg-white shadow-md">
+			<aside className="h-full flex flex-col bg-white shadow-md">
 				<Link className="flex p-4" to="/dashboard">
 					<img src={Logo} alt="Byway Logo" loading="lazy" />
 					<span className="text-2xl font-semibold">Byway</span>
@@ -36,7 +36,7 @@ const SideBar = () => {
 								to={item.to}
 								key={item.name}
 								className="flex items-center p-3 sidebar-link"
-								end>
+								end={item.name === 'Home'}>
 								<span className="mr-2">{item.icon}</span>
 								<span>{item.name}</span>
 							</NavLink>

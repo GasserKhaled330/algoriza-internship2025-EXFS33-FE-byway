@@ -8,6 +8,7 @@ const Breadcrumbs = () => {
 	const getCrumbText = (segment) => {
 		const segmentMap = {
 			dashboard: 'Dashboard',
+			instructors: 'Instructors',
 			courses: 'Courses',
 			add: 'Add New Course',
 			edit: 'Edit Course',

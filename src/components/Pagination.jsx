@@ -7,7 +7,7 @@ const Pagination = ({ totalPages, isPlaceholderData }) => {
 	const [currentPage, setCurrentPage] = useAtom(pageIndexAtom);
 	const [pageSize, setPageSize] = useAtom(pageSizeAtom);
 
-	const baseClasses =
+	const btnClasses =
 		'min-w-[100px] h-10 px-3 flex items-center justify-center font-medium rounded-lg transition-colors duration-200 border border-gray-300 shadow-sm whitespace-nowrap cursor-pointer disabled:cursor-not-allowed';
 
 	const handleOnPageChange = (newPageIndex) => {
@@ -43,7 +43,7 @@ const Pagination = ({ totalPages, isPlaceholderData }) => {
 					<button
 						onClick={() => handleOnPageChange(Math.max(currentPage - 1, 1))}
 						disabled={currentPage === 1}
-						className={`${baseClasses}`}
+						className={`${btnClasses}`}
 						aria-label="Previous page">
 						<ChevronLeft size={18} />
 						<span className="ml-1 hidden sm:inline">Previous</span>
@@ -56,7 +56,7 @@ const Pagination = ({ totalPages, isPlaceholderData }) => {
 								handleOnPageChange((currentPage) => currentPage + 1);
 						}}
 						disabled={isPlaceholderData || currentPage === totalPages}
-						className={`${baseClasses}`}
+						className={`${btnClasses}`}
 						aria-label="Next page">
 						<span className="mr-1 hidden sm:inline">Next</span>
 						<ChevronRight size={18} />

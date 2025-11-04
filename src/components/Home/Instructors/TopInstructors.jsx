@@ -3,30 +3,37 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 import InstructorCard from './InstructorCard'; // Assuming the component is correctly imported
 import { useQuery } from '@tanstack/react-query';
 import Instructor from '../../../api/Instructor';
+import Loader from '../../Common/Loader';
+import toast from 'react-hot-toast';
 
 const TopInstructors = () => {
 	const [activeIndex, setActiveIndex] = useState(0);
-	const ITEMS_TO_SHOW = 5;
-	const ITEM_WIDTH_PERCENT = Math.floor(100 / ITEMS_TO_SHOW);
-
+	const ITEMS_TO_SHOW = 4;
+	const ITEM_WIDTH_PERCENT = Math.ceil(100 / ITEMS_TO_SHOW);
+	const pageIndex = 1;
+	const pageSize = 6;
 	const { isLoading, isError, data } = useQuery({
-		queryKey: ['Instructors'],
-		queryFn: Instructor.getAllInstructors,
+		queryKey: ['Instructors', pageIndex, pageSize],
+		queryFn: () => Instructor.getInstructors(pageIndex, pageSize),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	if (isLoading) {
-		return <div>Loading Instructors...</div>;
+		return <Loader />;
 	}
 
 	if (isError) {
-		return <div>An error occurred while fetching data.</div>;
+		return toast.error(
+			<p className="text-sm font-medium">
+				An error occurred while fetching instructors data.
+			</p>
+		);
 	}
 
 	const instructors = data.data || [];
 
 	const itemCount = instructors.length;
-	const maxIndex =
-		itemCount > ITEMS_TO_SHOW ? itemCount - ITEMS_TO_SHOW + 1 : 0;
+	const maxIndex = itemCount > ITEMS_TO_SHOW ? itemCount - ITEMS_TO_SHOW : 0; // 6 > 4 ? 2 : 0
 	const slideAmount = -activeIndex * ITEM_WIDTH_PERCENT;
 
 	const nextSlide = () => {
@@ -41,7 +48,7 @@ const TopInstructors = () => {
 	const isNextDisabled = activeIndex === maxIndex;
 
 	return (
-		<section className="mx-auto py-12 px-4">
+		<section className="py-12 px-4">
 			<div className="flex justify-between items-center mb-6">
 				<h2 className="text-3xl font-bold text-gray-900">Top Instructors</h2>
 				<div className="flex gap-3">
@@ -78,9 +85,9 @@ const TopInstructors = () => {
 				</div>
 			</div>
 
-			<div className="flex overflow-x-scroll md:overflow-hidden pb-2">
+			<div className="flex overflow-hidden pb-2">
 				<div
-					className="flex gap-6 items-center transition-transform duration-500 ease-in-out"
+					className="flex gap-4 items-center transition-transform duration-500 ease-in-out"
 					style={{
 						transform: `translateX(${slideAmount}%)`,
 					}}>

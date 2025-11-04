@@ -3,6 +3,7 @@ import { Eye, PencilLine, Trash2 } from 'lucide-react';
 import { useSetAtom } from 'jotai';
 import {
 	selectedInstructorIdAtom,
+	selectedInstructorNameAtom,
 	showViewPopupAtom,
 	showDeletePopupAtom,
 	showUpdatePopupAtom,
@@ -16,6 +17,7 @@ import UpdateInstructorPopup from './popups/UpdateInstructorPopup.jsx';
 
 const InstructorsList = ({ columns, data }) => {
 	const setInstructorId = useSetAtom(selectedInstructorIdAtom);
+	const setInstructorFullName = useSetAtom(selectedInstructorNameAtom);
 	const setShowViewPopup = useSetAtom(showViewPopupAtom);
 	const setShowUpdatePopup = useSetAtom(showUpdatePopupAtom);
 	const setShowDeletePopup = useSetAtom(showDeletePopupAtom);
@@ -32,8 +34,9 @@ const InstructorsList = ({ columns, data }) => {
 		setShowUpdatePopup(true);
 	};
 
-	const handleOpenDeletePopup = (instructorId) => {
+	const handleOpenDeletePopup = (instructorId, fullName) => {
 		setInstructorId(instructorId);
+		setInstructorFullName(fullName);
 		setShowDeletePopup(true);
 	};
 
@@ -55,18 +58,21 @@ const InstructorsList = ({ columns, data }) => {
 				</thead>
 				<tbody>
 					{data.map(({ id, fullName, jobTitle, rate }) => (
-						<tr key={id} className="h-12 border-b border-gray-200">
-							<td className="py-2 px-4  text-gray-800">{fullName}</td>
-							<td className="py-2 px-4  text-gray-800">{jobTitle}</td>
-							<td className="py-2 px-4  text-gray-800 ">
-								{/*<div className="star-fill" style={{width: ((rate / 5) * 100) + "%" }}></div>*/}
+						<tr key={id} className="h-12 border-b border-gray-200 ">
+							<td className="py-2 px-4  text-gray-800 align-middle">
+								{fullName}
+							</td>
+							<td className="py-2 px-4  text-gray-800 align-middle">
+								{jobTitle}
+							</td>
+							<td className="py-2 px-4  text-gray-800 align-middle">
 								<span
 									className="average-rating"
 									style={{ '--star-fill': `${(rate / 5) * 100}%` }}
 									aria-label={`Rating: ${rate} out of 5`}></span>
 							</td>
 
-							<td className="flex items-center py-2 px-4  text-gray-800">
+							<td className="py-2 px-4 text-gray-800 align-middle">
 								<button
 									className="cursor-pointer"
 									title="show instructor data"
@@ -82,7 +88,7 @@ const InstructorsList = ({ columns, data }) => {
 								<button
 									className="cursor-pointer"
 									title="delete instructor"
-									onClick={() => handleOpenDeletePopup(id)}>
+									onClick={() => handleOpenDeletePopup(id, fullName)}>
 									<Trash2 color="#EB5757" size={16} />
 								</button>
 							</td>

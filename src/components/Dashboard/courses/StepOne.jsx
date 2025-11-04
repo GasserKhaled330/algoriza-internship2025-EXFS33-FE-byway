@@ -2,9 +2,10 @@ import React from 'react';
 import { useAtom } from 'jotai';
 import { formDataAtom } from '../../../Atoms/courseAtoms';
 import { Upload, Star } from 'lucide-react';
-import Category from '../../../api/Category';
 import { useQuery } from '@tanstack/react-query';
 import Instructor from '../../../api/Instructor';
+import { categoriesAtom } from '../../../Atoms/categoryAtoms';
+import { useAtomValue } from 'jotai';
 
 const inputClass =
 	'w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500';
@@ -12,6 +13,7 @@ const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
 
 const StepOne = ({ isViewMode, isEditMode }) => {
 	const [formData, setFormData] = useAtom(formDataAtom);
+	const categories = useAtomValue(categoriesAtom);
 	const imageUrl =
 		formData.image instanceof File
 			? URL.createObjectURL(formData.image)
@@ -19,14 +21,10 @@ const StepOne = ({ isViewMode, isEditMode }) => {
 			? formData.image
 			: null;
 
-	const { data: categories } = useQuery({
-		queryKey: ['Categories'],
-		queryFn: () => Category.getCategories(),
-	});
-
 	const { data: instructors } = useQuery({
 		queryKey: ['Instructors'],
-		queryFn: () => Instructor.getAllInstructors(),
+		queryFn: () => Instructor.getInstructors(),
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const handleChange = (e) => {

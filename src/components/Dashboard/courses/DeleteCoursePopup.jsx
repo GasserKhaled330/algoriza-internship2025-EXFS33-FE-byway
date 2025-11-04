@@ -1,25 +1,22 @@
 import React from 'react';
 import { Trash2 } from 'lucide-react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import Course from '../../../api/Course';
 import Popup from '../../Popup';
 import {
 	showDeleteCoursePopupAtom,
 	selectedCourseIdAtom,
+	selectedCourseNameAtom,
 } from '../../../Atoms/courseAtoms';
+import toast from 'react-hot-toast';
 
 const DeleteCoursePopup = ({ onClose }) => {
-	const showPopup = useAtomValue(showDeleteCoursePopupAtom);
 	const courseId = useAtomValue(selectedCourseIdAtom);
+	const selectedCourseName = useAtomValue(selectedCourseNameAtom);
+	const showPopup = useAtomValue(showDeleteCoursePopupAtom);
 
 	const queryClient = useQueryClient();
-
-	const { data: course } = useQuery({
-		queryKey: ['Course', courseId],
-		queryFn: () => Course.getCourseById(courseId),
-		enabled: !!courseId && showPopup,
-	});
 
 	const mutation = useMutation({
 		mutationKey: ['removeCourse', courseId],
@@ -27,15 +24,22 @@ const DeleteCoursePopup = ({ onClose }) => {
 		onSuccess: async () => {
 			onClose();
 			await queryClient.invalidateQueries({ queryKey: ['Courses'] });
+			toast.success(
+				<p className="text-sm font-medium">course data deleted successfully</p>
+			);
 		},
-		onError: (error) => {
-			console.error('Mutation error:', error);
+		onError: () => {
+			toast.error(
+				<p className="text-sm font-medium">
+					Failed to remove course. Try again later
+				</p>
+			);
 		},
 	});
 
 	return (
 		<Popup show={showPopup} onClose={onClose}>
-			<div className="flex flex-col items-center justify-center min-h-[250px] max-w-[400px]">
+			<div className="flex flex-col items-center justify-center">
 				<div className="flex flex-col items-center justify-center">
 					<div className="flex justify-center items-center bg-red-300 w-[80px] h-[80px] rounded-full">
 						<Trash2 color="#FF5555" size={60} />
@@ -44,7 +48,7 @@ const DeleteCoursePopup = ({ onClose }) => {
 						Are you sure you want to delete this course
 						<br />
 						<span className="text-[#242B42] text-lg font-semibold p-1">
-							{course?.name}?
+							{selectedCourseName}?
 						</span>
 					</p>
 				</div>
@@ -52,7 +56,7 @@ const DeleteCoursePopup = ({ onClose }) => {
 				<div className="flex justify-center">
 					<button
 						onClick={() => {
-							mutation.mutate(course?.id);
+							mutation.mutate(courseId);
 						}}
 						className="text-white min-w-[200px] text-xl bg-[#EF5A5A] rounded p-2 mt-4 cursor-pointer">
 						Delete

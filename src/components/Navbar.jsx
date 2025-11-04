@@ -11,6 +11,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { ShoppingCart, LogOut, Menu } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import Cart from '../api/Cart.js';
+import Loader from './Common/Loader.jsx';
 
 const Navbar = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,11 +34,11 @@ const Navbar = () => {
 	} = useQuery({
 		queryKey: ['cartCount'],
 		queryFn: Cart.getCartItemsCount,
-		enabled: isAuthenticated,
+		enabled: isAuthenticated && user.roles.includes('User'),
 	});
 
-	if (isLoading) return <p>Loading Cart Count...</p>;
-	if (isError) return <p>An error occurred while fetching data.</p>;
+	if (isLoading) return <Loader />;
+	if (isError) return <p>An error occurred while fetching cart data.</p>;
 
 	return (
 		<nav className="container min-h-[70px]">
