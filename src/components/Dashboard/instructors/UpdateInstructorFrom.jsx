@@ -55,7 +55,13 @@ const UpdateInstructorFrom = () => {
 			Instructor.saveInstructor(updatedInstructor),
 		onSuccess: async () => {
 			onClose();
-			await queryClient.invalidateQueries({ queryKey: ['instructors'] });
+			await Promise.all([
+				queryClient.invalidateQueries({ queryKey: ['instructors'] }),
+				queryClient.invalidateQueries({
+					queryKey: ['instructor', instructorId],
+				}),
+			]);
+
 			toast.success(
 				<p className="text-sm font-medium">
 					instructor data updated successfully

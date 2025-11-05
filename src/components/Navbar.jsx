@@ -43,11 +43,12 @@ const Navbar = () => {
 	return (
 		<nav className="container min-h-[70px]">
 			<div className="flex flex-wrap items-center justify-between py-4 sm:justify-normal sm:flex-nowrap">
-				<Link className="flex basis-1/6" to="/">
-					<img src={Logo} alt="Byway Logo" loading="lazy" />
-					<span className="text-2xl font-semibold">Byway</span>
+				<Link to="/">
+					<div className="flex items-center mr-2">
+						<img src={Logo} alt="Byway Logo" loading="lazy" />
+						<span className="text-2xl font-semibold">Byway</span>
+					</div>
 				</Link>
-
 				<button
 					onClick={toggleMobileMenu}
 					type="button"

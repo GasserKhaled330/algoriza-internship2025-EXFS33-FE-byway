@@ -1,13 +1,5 @@
 @import 'tailwindcss';
 
-html {
-	@apply scroll-smooth;
-}
-
-body {
-	overflow-x: hidden;
-}
-
 @utility container {
 	margin-inline: auto;
 	padding-inline: 4rem;
@@ -30,7 +22,7 @@ body {
 }
 
 html {
-	@apply h-full;
+	@apply h-full scroll-smooth;
 }
 
 body {
