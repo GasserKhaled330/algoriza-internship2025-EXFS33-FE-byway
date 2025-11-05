@@ -77,7 +77,7 @@ const MultistepCourseForm = ({ isViewMode, isEditMode }) => {
 				const value = formData[key];
 				if (key === 'contents') {
 					value.forEach((content, index) => {
-						if (isEditMode && selectedCourseId) {
+						if (isEditMode && selectedCourseId && content.id) {
 							form.append(`contents[${index}].id`, content.id);
 						}
 						form.append(`contents[${index}].name`, content.name);
