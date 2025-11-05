@@ -69,7 +69,7 @@ const CheckoutPage = () => {
 		onError: (error) => {
 			toast.error(
 				<p className="text-sm font-medium">
-					{error?.response.data.detail ||
+					{error.response?.data.detail ||
 						'Checkout failed, Please check your details.'}
 				</p>
 			);

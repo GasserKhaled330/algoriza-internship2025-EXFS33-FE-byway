@@ -46,12 +46,13 @@ const StepOne = ({ isViewMode, isEditMode }) => {
 		<div>
 			{/* course image upload */}
 			<div className="p-4 border border-dashed border-gray-300 rounded-lg mb-6 flex items-center">
-				<div className="flex items-center justify-center w-32 h-32 bg-gray-50 rounded-lg mr-4">
+				<div className="flex items-center justify-center w-50 h-40 bg-gray-50 rounded-lg mr-4">
 					{imageUrl ? (
 						<img
 							src={imageUrl}
 							alt="Course Preview"
-							className="w-full h-full object-cover rounded-lg"
+							className="w-full h-full object-fill rounded-lg"
+							loading="lazy"
 						/>
 					) : (
 						<Upload className="w-6 h-6 text-gray-400" />

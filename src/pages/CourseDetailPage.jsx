@@ -121,9 +121,11 @@ const CourseDetailPage = () => {
 				}),
 			]);
 		},
-		onError: () => {
+		onError: (error) => {
 			toast.error(
-				<p className="text-sm font-medium">Failed to add course to cart</p>
+				<p className="text-sm font-medium">
+					{error.response?.data.detail || 'Failed to add course to cart'}
+				</p>
 			);
 		},
 	});

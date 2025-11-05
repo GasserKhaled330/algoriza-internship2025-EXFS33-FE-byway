@@ -35,11 +35,11 @@ const CartItem = ({ item }) => {
 
 	return (
 		<div className="flex p-4 border border-gray-400 rounded-lg shadow-sm mb-4 bg-white last:mb-0">
-			<div className="w-28 h-28 flex-shrink-0 mr-4 rounded-md overflow-hidden">
+			<div className="w-50 h-40 flex-shrink-0 mr-4 rounded-md overflow-hidden">
 				<img
 					src={item.imagePath}
 					alt={item.name}
-					className="w-full h-full object-fill"
+					className="w-full h-full object-fill rounded-lg"
 				/>
 			</div>
 

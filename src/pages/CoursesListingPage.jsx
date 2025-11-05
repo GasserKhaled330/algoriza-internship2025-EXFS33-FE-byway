@@ -8,6 +8,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import Course from '../api/Course';
 import Loader from '../components/Common/Loader';
 import CoursesNotMatch from '../assets/courses-not-match.svg';
+import toast from 'react-hot-toast';
 
 const CoursesListingPage = () => {
 	const filters = useAtomValue(courseFilterAtom);
@@ -28,7 +29,11 @@ const CoursesListingPage = () => {
 	}
 
 	if (isError) {
-		return <div>An error occurred while fetching data.</div>;
+		toast.error(
+			<p className="text-sm font-medium">
+				An error occurred while fetching data.
+			</p>
+		);
 	}
 
 	const courses = data?.data || [];

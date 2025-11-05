@@ -53,7 +53,12 @@ const Footer = () => {
 					<div>
 						<div className="flex items-center mb-4">
 							<div className="flex items-center">
-								<img src={Logo} alt="by way logo" loading="lazy" />
+								<img
+									src={Logo}
+									alt="by way logo"
+									loading="lazy"
+									className="w-8 h-8"
+								/>
 								<span className="text-3xl font-semibold">Byway</span>
 							</div>
 						</div>

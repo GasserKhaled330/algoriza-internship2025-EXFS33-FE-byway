@@ -45,10 +45,13 @@ const MultistepCourseForm = ({ isViewMode, isEditMode }) => {
 			if (isEditMode) toast.success('Course updated successfully!');
 			else toast.success('Course added successfully!');
 		},
-		onError: () => {
+		onError: (error) => {
 			toast.error(
 				<p className="text-sm font-medium">
-					Failed to save course data. Try again later
+					<p className="text-sm font-medium">
+						{error.response?.data.detail ||
+							'Failed to save course data. Try again later'}
+					</p>
 				</p>
 			);
 		},

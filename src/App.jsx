@@ -40,6 +40,56 @@ function App() {
 							<Route path="/dashboard" element={<Dashboard />}>
 								<Route index element={<Statistics />} />
 								<Route path="instructors" element={<Instructors />} />
+								<Route path="courses" element={<Courses />} />
+								<Route path="courses/add" element={<CourseFormContainer />} />
+								<Route
+									path="courses/view/:courseId"
+									element={<CourseFormContainer />}
+								/>
+								<Route
+									path="courses/edit/:courseId"
+									element={<CourseFormContainer />}
+								/>
+							</Route>
+						</Route>
+
+						<Route path="/" element={<Home />}>
+							<Route index element={<LandingPage />} />
+							<Route path="signin" element={<SignIn />} />
+							<Route path="signup" element={<SignUp />} />
+							<Route path="courses" element={<CoursesListingPage />} />
+							<Route path="courses/:courseId" element={<CourseDetailPage />} />
+
+							<Route element={<ProtectedRoute allowedRoles={['User']} />}>
+								<Route path="cart" element={<ShoppingCartPage />} />
+								<Route path="checkout" element={<CheckoutPage />} />
+								<Route
+									path="order-confirmation"
+									element={<OrderConfirmationPage />}
+								/>
+							</Route>
+						</Route>
+
+						<Route path="/unauthorized" element={<UnAuthorized />} />
+						<Route path="*" element={<NotFound />} />
+					</Routes>
+					<Toaster position="top-right" reverseOrder={false} />
+				</BrowserRouter>
+			</QueryClientProvider>
+		</>
+	);
+}
+
+/* function App() {
+	return (
+		<>
+			<QueryClientProvider client={queryClient}>
+				<BrowserRouter>
+					<Routes>
+						<Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
+							<Route path="/dashboard" element={<Dashboard />}>
+								<Route index element={<Statistics />} />
+								<Route path="instructors" element={<Instructors />} />
 								<Route exact path="courses" element={<Courses />} />
 								<Route
 									path="/dashboard/courses/add"
@@ -85,6 +135,6 @@ function App() {
 			</QueryClientProvider>
 		</>
 	);
-}
+} */
 
 export default App;

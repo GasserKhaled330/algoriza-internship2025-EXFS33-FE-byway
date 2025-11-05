@@ -58,10 +58,11 @@ const AddInstructorForm = () => {
 				</p>
 			);
 		},
-		onError: () => {
+		onError: (error) => {
 			toast.error(
 				<p className="text-sm font-medium">
-					Failed to save instructor data, Please try again later.
+					{error.response?.data.detail ||
+						'Failed to save instructor data, Please try again later.'}
 				</p>
 			);
 		},

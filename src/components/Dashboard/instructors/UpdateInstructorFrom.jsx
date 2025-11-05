@@ -68,10 +68,11 @@ const UpdateInstructorFrom = () => {
 				</p>
 			);
 		},
-		onError: () => {
+		onError: (error) => {
 			toast.error(
 				<p className="text-sm font-medium">
-					Failed to update instructor data, Please try again later.
+					{error.response?.data.detail ||
+						'Failed to update instructor data, Please try again later.'}
 				</p>
 			);
 		},
@@ -142,7 +143,7 @@ const UpdateInstructorFrom = () => {
 								name="image"
 								className="size-20 rounded cursor-pointer"
 								alt="Uploaded preview"
-								loading='lazy'
+								loading="lazy"
 							/>
 						) : (
 							<ImageUp

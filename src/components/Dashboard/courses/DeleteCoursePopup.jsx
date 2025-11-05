@@ -28,10 +28,11 @@ const DeleteCoursePopup = ({ onClose }) => {
 				<p className="text-sm font-medium">course data deleted successfully</p>
 			);
 		},
-		onError: () => {
+		onError: (error) => {
 			toast.error(
 				<p className="text-sm font-medium">
-					Failed to remove course. Try again later
+					{error.response?.data.detail ||
+						'Failed to remove course. Try again later'}
 				</p>
 			);
 		},

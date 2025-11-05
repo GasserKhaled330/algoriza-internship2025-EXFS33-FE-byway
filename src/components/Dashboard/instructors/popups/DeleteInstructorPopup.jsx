@@ -30,11 +30,12 @@ const DeleteInstructorPopup = ({ onClose }) => {
 				</p>
 			);
 		},
-		onError: () => {
+		onError: (error) => {
 			toast.error(
 				<p className="text-sm font-medium">
-					Failed to delete instructor {instructorFullName}, Please try again
-					later.
+					{error.response?.data.detail ||
+						`Failed to delete instructor ${instructorFullName}, Please try again
+					later.`}
 				</p>
 			);
 		},
