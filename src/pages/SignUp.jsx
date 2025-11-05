@@ -85,9 +85,10 @@ const SignUp = () => {
 	return (
 		<div className="min-h-175 grid grid-cols-1  md:grid-cols-2">
 			<img
-				src={SignupImg}
+				src={SignupImg || 'https://placehold.co/1900x1200'}
 				alt="welcome signup image"
 				className="hidden md:block min-h-full object-cover"
+				loading="lazy"
 			/>
 
 			{/* sign up form */}

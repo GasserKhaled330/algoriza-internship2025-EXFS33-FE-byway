@@ -53,7 +53,7 @@ const Footer = () => {
 					<div>
 						<div className="flex items-center mb-4">
 							<div className="flex items-center">
-								<img src={Logo} alt="by way logo" />
+								<img src={Logo} alt="by way logo" loading="lazy" />
 								<span className="text-3xl font-semibold">Byway</span>
 							</div>
 						</div>
@@ -96,7 +96,12 @@ const Footer = () => {
 									href={href}
 									className={`flex items-center justify-center w-8 h-8 rounded-full bg-white hover:bg-gray-200 transition duration-200`}
 									aria-label={Icon.name}>
-									<img src={Icon} alt={name} className={`w-4 h-4`} />
+									<img
+										src={Icon}
+										alt={name}
+										className={`w-4 h-4`}
+										loading="lazy"
+									/>
 								</Link>
 							))}
 						</div>

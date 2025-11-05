@@ -89,7 +89,7 @@ const Categories = () => {
 								width: `calc(${ITEM_WIDTH_PERCENT}% - ${GAP_PER_ITEM}rem)`,
 							}}>
 							<div className="flex justify-center items-center bg-[#E0F2FE] w-[100px] h-[100px] rounded-full mb-3">
-								<img src={item.imagePath} alt="category image" />
+								<img src={item.imagePath} alt="category image" loading='lazy'/>
 							</div>
 							<p className="text-[#0F172A] text-lg font-bold mb-3">
 								{item.name}

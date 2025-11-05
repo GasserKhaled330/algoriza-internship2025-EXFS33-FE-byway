@@ -15,7 +15,7 @@ const CourseCard = ({ course }) => {
 	const lectures = totalLectures || 155;
 	const cost = course?.cost || 45.0;
 	const tag = course?.categoryName || 'UI/UX Design';
-	const imageUrl = course?.imagePath;
+	const imageUrl = course?.imagePath || 'https://placehold.co/600x400';
 	const rate = course?.rate || 5;
 	const level = course?.level || 'Beginner';
 	// Helper function to render star icons

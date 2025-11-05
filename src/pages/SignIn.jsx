@@ -158,9 +158,10 @@ const SignIn = () => {
 				{/*Image*/}
 				<div className="hidden lg:block lg:w-1/2 felx items-center justify-center">
 					<img
-						src={loginImage}
+						src={loginImage || `https://placehold.co/1900x1200`}
 						alt="login image"
 						className="hidden md:block min-h-full object-cover"
+						loading="lazy"
 					/>
 				</div>
 			</main>

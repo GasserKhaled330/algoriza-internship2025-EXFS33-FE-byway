@@ -142,6 +142,7 @@ const UpdateInstructorFrom = () => {
 								name="image"
 								className="size-20 rounded cursor-pointer"
 								alt="Uploaded preview"
+								loading='lazy'
 							/>
 						) : (
 							<ImageUp

@@ -34,7 +34,7 @@ const CoursesListingPage = () => {
 	const courses = data?.data || [];
 	const coursesTotalCount = data?.totalCount;
 	const totalPages = Math.ceil((coursesTotalCount || 0) / filters.pageSize);
-	
+
 	return (
 		<div className="bg-gray-50 min-h-screen pt-12 pb-20">
 			<div className="mx-auto px-6">
@@ -122,6 +122,7 @@ const CoursesListingPage = () => {
 									src={CoursesNotMatch}
 									alt="Courses Not Match Selected Criteria"
 									className="flex justify-center items-center w-[200px] h-[200px]"
+									loading="lazy"
 								/>
 								<p className="text-lg font-medium mt-4">
 									No matching courses found

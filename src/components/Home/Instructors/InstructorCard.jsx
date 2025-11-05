@@ -7,7 +7,7 @@ const InstructorCard = ({ instructor, ITEM_WIDTH_PERCENT }) => {
 	const title = instructor?.jobTitle || 'UI/UX Designer';
 	const rating = instructor?.rate || 4.9;
 	const students = instructor?.students || 2400;
-	const imageUrl = instructor?.imagePath || 'placeholder-instructor.jpg'; // Replace with a real image path
+	const imageUrl = instructor?.imagePath || 'https://placehold.co/600x400';
 
 	const mapJobTitles = (title) => {
 		switch (title) {

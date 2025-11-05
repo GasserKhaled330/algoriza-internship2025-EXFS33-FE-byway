@@ -369,6 +369,7 @@ const CourseDetailPage = () => {
 													src={AvaterImage}
 													alt={review.name}
 													className="object-cover"
+													loading="lazy"
 												/>
 											</div>
 											<div>
@@ -407,6 +408,7 @@ const CourseDetailPage = () => {
 									src={course.imageUrl}
 									alt="Course Thumbnail"
 									className="w-full h-auto object-cover"
+									loading="lazy"
 								/>
 							</div>
 
@@ -455,7 +457,12 @@ const CourseDetailPage = () => {
 											href={href}
 											className={`flex items-center justify-center w-8 h-8 rounded-full bg-white hover:scale-125 transition duration-300`}
 											aria-label={Icon.name}>
-											<img src={Icon} alt={name} className={`size-6`} />
+											<img
+												src={Icon}
+												alt={name}
+												className={`size-6`}
+												loading="lazy"
+											/>
 										</Link>
 									))}
 								</div>

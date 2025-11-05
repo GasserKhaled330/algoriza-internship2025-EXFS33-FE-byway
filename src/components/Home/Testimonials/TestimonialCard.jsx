@@ -27,6 +27,7 @@ const TestimonialCard = ({ testimonial, ITEM_WIDTH_PERCENT }) => {
 						src={AvaterImage}
 						alt={name}
 						className="w-full h-full object-cover"
+						loading="lazy"
 					/>
 				</div>
 

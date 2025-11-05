@@ -131,6 +131,7 @@ const AddInstructorForm = () => {
 									src={form.imagePreview}
 									className="size-20 rounded cursor-pointer"
 									alt="Uploaded preview"
+									loading="lazy"
 								/>
 							) : (
 								<ImageUp

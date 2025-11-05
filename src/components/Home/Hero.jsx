@@ -24,7 +24,7 @@ const Hero = () => {
 				</div>
 			</div>
 			<div>
-				<img src={BannerImage} alt="banner image" />
+				<img src={BannerImage} alt="banner image" loading="lazy" />
 			</div>
 		</section>
 	);
