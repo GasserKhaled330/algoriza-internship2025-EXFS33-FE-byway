@@ -63,7 +63,7 @@ const CheckoutPage = () => {
 				queryClient.invalidateQueries({ queryKey: ['cartItems'] }),
 				queryClient.invalidateQueries({ queryKey: ['cartCount'] }),
 			]);
-			toast.success('Checkout successful!!!', { position: 'top-center' });
+			toast.success('Checkout successful!!!');
 			navigate('/order-confirmation');
 		},
 		onError: (error) => {

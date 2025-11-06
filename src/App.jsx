@@ -73,7 +73,7 @@ function App() {
 						<Route path="/unauthorized" element={<UnAuthorized />} />
 						<Route path="*" element={<NotFound />} />
 					</Routes>
-					<Toaster position="top-right" reverseOrder={false} />
+					<Toaster position="top-center" reverseOrder={false} />
 				</BrowserRouter>
 			</QueryClientProvider>
 		</>

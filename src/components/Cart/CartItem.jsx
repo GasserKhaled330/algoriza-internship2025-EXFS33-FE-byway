@@ -16,6 +16,11 @@ const CartItem = ({ item }) => {
 					queryKey: ['Cart', 'itemStatus', item.courseId],
 				}),
 			]);
+			toast.success(
+				<p className="text-sm font-medium">
+					Course removed from cart successfully!!!
+				</p>
+			);
 		},
 		onError: () => {
 			toast.error(

@@ -105,6 +105,7 @@ const CourseDetailPage = () => {
 		queryKey: ['Cart', 'itemStatus', courseId],
 		queryFn: () => Cart.checkItemStatus(courseId),
 		enabled: !!courseId,
+		staleTime: 0,
 	});
 
 	const queryClient = useQueryClient();
