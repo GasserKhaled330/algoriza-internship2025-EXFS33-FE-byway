@@ -141,7 +141,7 @@ const UpdateInstructorFrom = () => {
 								src={imagePreview}
 								id="image"
 								name="image"
-								className="size-20 rounded cursor-pointer"
+								className="size-30 rounded cursor-pointer object-fill"
 								alt="Uploaded preview"
 								loading="lazy"
 							/>
@@ -150,7 +150,7 @@ const UpdateInstructorFrom = () => {
 								className={`${
 									imagePreview && 'hidden'
 								} bg-[#F2F2F2] fill-indigo-500  rounded cursor-pointer`}
-								size={80}
+								size={120}
 							/>
 						)}
 					</label>

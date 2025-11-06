@@ -52,7 +52,7 @@ const ShowInstructorPopup = ({ onClose }) => {
 						src={instructor?.imagePath}
 						id="image"
 						name="image"
-						className="size-20 rounded cursor-pointer"
+						className="size-30 rounded cursor-pointer object-fill"
 						alt="instructor image"
 						loading="lazy"
 					/>

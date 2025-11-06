@@ -36,7 +36,7 @@ const InstructorCard = ({ instructor, ITEM_WIDTH_PERCENT }) => {
 				<img
 					src={imageUrl}
 					alt={name}
-					className="w-xs h-full max-h-[256px] rounded shadow-lg"
+					className="w-64 h-64 rounded shadow-lg object-cover"
 					loading="lazy"
 				/>
 			</div>
