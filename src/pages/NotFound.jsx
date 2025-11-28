@@ -5,10 +5,10 @@ const NotFound = () => {
 	return (
 		<main className="relative flex flex-col items-center justify-center min-h-screen p-6 overflow-hidden z-1">
 			<div className="absolute right-0 top-0 -z-1 w-full max-w-[250px] xl:max-w-[450px]">
-				<img alt="grid" src={gridImage} loading="lazy" />
+				<img alt="grid" src={gridImage} />
 			</div>
 			<div className="absolute bottom-0 left-0 -z-1 w-full max-w-[250px] rotate-180 xl:max-w-[450px]">
-				<img alt="grid" src={gridImage} loading="lazy" />
+				<img alt="grid" src={gridImage} />
 			</div>
 			<div className="mx-auto w-full max-w-[242px] text-center sm:max-w-[472px]">
 				<p className="text-base font-semibold text-[#465FFF]">404</p>

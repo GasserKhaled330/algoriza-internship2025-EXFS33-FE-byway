@@ -33,7 +33,6 @@ const TransformYourLife = () => {
 						src={TransformYourLifeImage}
 						alt="Instructor smiling"
 						className="w-[400px] h-auto max-w-full"
-						loading="lazy"
 					/>
 				</div>
 			</div>

@@ -11,7 +11,6 @@ const BecomeInstructor = () => {
 						src={BecomeInstructorImage}
 						alt="Instructor smiling"
 						className="w-[400px] h-auto max-w-full"
-						loading='lazy'
 					/>
 				</div>
 

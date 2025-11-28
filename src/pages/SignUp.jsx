@@ -88,7 +88,6 @@ const SignUp = () => {
 				src={SignupImg || 'https://placehold.co/1900x1200'}
 				alt="welcome signup image"
 				className="hidden md:block min-h-full object-cover"
-				loading="lazy"
 			/>
 
 			{/* sign up form */}

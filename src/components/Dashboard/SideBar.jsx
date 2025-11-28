@@ -26,7 +26,7 @@ const SideBar = () => {
 		<>
 			<aside className="h-full flex flex-col bg-white shadow-md">
 				<Link className="flex p-4" to="/dashboard">
-					<img src={Logo} alt="Byway Logo" loading="lazy" />
+					<img src={Logo} alt="Byway Logo" />
 					<span className="text-2xl font-semibold">Byway</span>
 				</Link>
 				<div className="flex justify-center items-center">

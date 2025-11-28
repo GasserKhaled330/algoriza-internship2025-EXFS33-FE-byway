@@ -372,7 +372,6 @@ const CourseDetailPage = () => {
 													src={AvaterImage}
 													alt={review.name}
 													className="object-cover"
-													loading="lazy"
 												/>
 											</div>
 											<div>

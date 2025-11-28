@@ -45,12 +45,7 @@ const Navbar = () => {
 			<div className="flex flex-wrap items-center justify-between py-4 sm:justify-normal sm:flex-nowrap">
 				<Link to="/">
 					<div className="flex items-center mr-2">
-						<img
-							src={Logo}
-							alt="Byway Logo"
-							loading="lazy"
-							className="w-8 h-8"
-						/>
+						<img src={Logo} alt="Byway Logo" className="w-8 h-8" />
 						<span className="text-2xl font-semibold">Byway</span>
 					</div>
 				</Link>

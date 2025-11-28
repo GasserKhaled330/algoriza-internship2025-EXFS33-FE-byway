@@ -161,7 +161,6 @@ const SignIn = () => {
 						src={loginImage || `https://placehold.co/1900x1200`}
 						alt="login image"
 						className="hidden md:block min-h-full object-cover"
-						loading="lazy"
 					/>
 				</div>
 			</main>
