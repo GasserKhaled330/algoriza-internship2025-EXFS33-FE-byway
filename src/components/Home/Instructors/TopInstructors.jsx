@@ -3,8 +3,8 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 import InstructorCard from './InstructorCard'; // Assuming the component is correctly imported
 import { useQuery } from '@tanstack/react-query';
 import Instructor from '../../../api/Instructor';
-import Loader from '../../Common/Loader';
 import toast from 'react-hot-toast';
+import Spinner from '../../Common/Spinner';
 
 const TopInstructors = () => {
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -19,7 +19,7 @@ const TopInstructors = () => {
 	});
 
 	if (isLoading) {
-		return <Loader />;
+		return <Spinner width={80} height={80} />;
 	}
 
 	if (isError) {

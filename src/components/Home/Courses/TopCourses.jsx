@@ -3,8 +3,8 @@ import CourseCard from './CourseCard';
 import { useQuery } from '@tanstack/react-query';
 import Course from '../../../api/Course';
 import { Link } from 'react-router-dom';
-import Loader from '../../Common/Loader';
 import toast from 'react-hot-toast';
+import Spinner from '../../Common/Spinner';
 
 const TopCourses = () => {
 	const topCoursesCount = 4;
@@ -19,7 +19,7 @@ const TopCourses = () => {
 	});
 
 	if (isLoading) {
-		return <Loader />;
+		return <Spinner width={80} height={80} />;
 	}
 
 	if (isError) {
