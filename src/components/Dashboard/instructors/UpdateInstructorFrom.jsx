@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ImageUp, Star } from 'lucide-react';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Instructor from '../../../api/Instructor.js';
 import {
@@ -15,7 +15,7 @@ import Loader from '../../Common/Loader.jsx';
 import toast from 'react-hot-toast';
 
 const UpdateInstructorFrom = () => {
-	const jobTitles = useAtomValue(instructorJobTitlesAtom);
+	const [{ data: jobTitles }] = useAtom(instructorJobTitlesAtom);
 	const instructorId = useAtomValue(selectedInstructorIdAtom);
 	const showPopup = useAtomValue(showUpdatePopupAtom);
 	const onClose = useSetAtom(closeAllPopupsAtom);

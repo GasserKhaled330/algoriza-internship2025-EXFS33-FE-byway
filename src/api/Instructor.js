@@ -12,14 +12,6 @@ const getInstructors = async (pageIndex = 1, pageSize, name, jobTitle) => {
 	return response.data;
 };
 
-// const getAllInstructors = async (pageIndex = 1, pageSize = 6) => {
-// 	const params = new URLSearchParams();
-// 	if (pageIndex) params.append('pageIndex', pageIndex);
-// 	if (pageSize) params.append('pageSize', pageSize);
-// 	const response = await axiosInstance.get(`/instructors?${params.toString()}`);
-// 	return response.data;
-// };
-
 const getInstructor = async (instructorId) => {
 	const response = await axiosInstance.get(`/instructors/${instructorId}`);
 	return response.data;

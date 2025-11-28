@@ -1,9 +1,23 @@
 ﻿import { atom } from 'jotai';
+import { atomWithQuery } from 'jotai-tanstack-query';
 import Instructor from '../api/Instructor';
 
-export const instructorJobTitlesAtom = atom(
-	async () => await Instructor.getInstructorJobTitles()
-);
+export const instructorJobTitlesAtom = atomWithQuery(() => ({
+	queryKey: ['instructorJobTitles'],
+	queryFn: () => Instructor.getInstructorJobTitles(),
+	staleTime: 1000 * 60 * 5,
+	gcTime: 1000 * 60 * 10,
+}));
+
+export const instructorCountAtom = atomWithQuery(() => ({
+	queryKey: ['instructorsCount'],
+	queryFn: async () => {
+		const data = await Instructor.getInstructorsCount();
+		return typeof data === 'number' ? data : data?.count || 0;
+	},
+	staleTime: 1000 * 60 * 5,
+	gcTime: 1000 * 60 * 10,
+}));
 
 export const pageIndexAtom = atom(1);
 export const pageSizeAtom = atom(5);

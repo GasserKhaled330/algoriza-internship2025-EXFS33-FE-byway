@@ -3,7 +3,7 @@ import Popup from '../../Popup.jsx';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ImageUp, Star } from 'lucide-react';
 import Instructor from '../../../api/Instructor.js';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
 	instructorJobTitlesAtom,
 	showAddPopupAtom,
@@ -25,7 +25,7 @@ const validateForm = (formData) => {
 };
 
 const AddInstructorForm = () => {
-	const jobTitles = useAtomValue(instructorJobTitlesAtom);
+	const [{ data: jobTitles }] = useAtom(instructorJobTitlesAtom);
 	const showPopup = useAtomValue(showAddPopupAtom);
 	const onClose = useSetAtom(closeAllPopupsAtom);
 	const initalFormData = {

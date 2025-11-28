@@ -23,15 +23,13 @@ import toast from 'react-hot-toast';
 
 const Instructors = () => {
 	const tableColName = ['Name', 'Job Title', 'Rate', 'Action'];
-	const jobTitles = useAtomValue(instructorJobTitlesAtom);
+	const [{ data: jobTitles }] = useAtom(instructorJobTitlesAtom);
 	const setShowPopup = useSetAtom(showAddPopupAtom);
 	const closeAllPopups = useSetAtom(closeAllPopupsAtom);
-
 	const [pageIndex, setPageIndex] = useAtom(pageIndexAtom);
 	const pageSize = useAtomValue(pageSizeAtom);
 	const [name, setName] = useAtom(nameSearchAtom);
 	const [jobTitle, setJobTitle] = useAtom(jobTitleFilterAtom);
-
 	const debouncedNameSearch = useDebounce(name, 300);
 
 	const {
