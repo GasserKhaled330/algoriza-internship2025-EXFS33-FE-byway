@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+// Helper function to render star icons
+const renderStars = (rating = 5) => {
+	return Array.from({ length: 5 }, (_, index) => (
+		<Star
+			key={index}
+			className={`w-4 h-4 ${
+				index < rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'
+			}`}
+		/>
+	));
+};
+
 const CourseCard = ({ course }) => {
-	// Use data from the course object, or defaults for the placeholder
-	const totalLectures =
-		course?.contents.reduce((sum, content) => {
-			return sum + content.lecturesCount;
-		}, 0) || 0;
+	const totalLectures = useMemo(() => {
+		const contents = course?.contents ?? [];
+		return (
+			contents.reduce((sum, content) => {
+				return sum + (Number(content?.lecturesCount) || 0);
+			}, 0) || 20
+		);
+	}, [course?.contents]);
 
 	const title = course?.name || "Beginner's Guide to Design";
 	const instructor = course?.instructorName || 'Ronald Richards';
@@ -18,17 +33,7 @@ const CourseCard = ({ course }) => {
 	const imageUrl = course?.imagePath || 'https://placehold.co/600x400';
 	const rate = course?.rate || 5;
 	const level = course?.level || 'Beginner';
-	// Helper function to render star icons
-	const renderStars = (rating = 5) => {
-		return Array.from({ length: 5 }, (_, index) => (
-			<Star
-				key={index}
-				className={`w-4 h-4 ${
-					index < rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'
-				}`}
-			/>
-		));
-	};
+	const stars = useMemo(() => renderStars(rate), [rate]);
 
 	return (
 		<Link
@@ -61,9 +66,7 @@ const CourseCard = ({ course }) => {
 				<p className="text-gray-600 text-sm mb-2">By {instructor}</p>
 
 				{/* Rating Stars */}
-				<div className="flex items-center space-x-0.5 mb-2">
-					{renderStars(rate)}
-				</div>
+				<div className="flex items-center space-x-0.5 mb-2">{stars}</div>
 
 				{/* Details */}
 				<p className="text-gray-500 text-xs mb-3">
@@ -77,4 +80,4 @@ const CourseCard = ({ course }) => {
 	);
 };
 
-export default CourseCard;
+export default React.memo(CourseCard);

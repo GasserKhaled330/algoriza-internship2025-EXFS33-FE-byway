@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Star, Clock, List, Eye, PencilLine, Trash2 } from 'lucide-react';
 import { useSetAtom } from 'jotai';
 import {
@@ -33,11 +33,15 @@ const CourseCard = ({ course }) => {
 	const rate = course?.rate || 5;
 	const totalHours = course?.totalHours || 22;
 	const cost = course?.cost || 45.0;
-	const totalLectures =
-		course?.contents.reduce((sum, content) => {
-			return sum + content.lecturesCount;
-		}, 0) || 20;
-
+	const totalLectures = useMemo(() => {
+		const contents = course?.contents ?? [];
+		return (
+			contents.reduce((sum, content) => {
+				return sum + (Number(content?.lecturesCount) || 0);
+			}, 0) || 20
+		);
+	}, [course?.contents]);
+	const stars = useMemo(() => renderStars(rate), [rate]);
 	const handleOpenDeletePopup = (id, name) => {
 		setCourseId(id);
 		setCourseName(name);
@@ -69,9 +73,7 @@ const CourseCard = ({ course }) => {
 				</h3>
 				<p className="text-gray-600 text-sm mb-2">By {instructorName}</p>
 
-				<div className="flex items-center space-x-0.5 mb-2">
-					{renderStars(rate)}
-				</div>
+				<div className="flex items-center space-x-0.5 mb-2">{stars}</div>
 				<p className="text-gray-500 text-xs mb-3">
 					{totalHours} Total Hours. {totalLectures} Lectures.{' '}
 					<strong>{level}</strong>
@@ -108,4 +110,4 @@ const CourseCard = ({ course }) => {
 	);
 };
 
-export default CourseCard;
+export default React.memo(CourseCard);
