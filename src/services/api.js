@@ -1,8 +1,8 @@
 ﻿import axios from 'axios';
 import auth from '../api/auth.js';
 
-const API_BASE_URL = 'https://gasserkhaled-001-site1.anytempurl.com/api';
-const API_BASE_URL_Development = 'https://localhost:7151/api';
+const API_BASE_URL =
+	import.meta.env.VITE_API_BASE_URL || 'https://localhost:7151/api';
 
 const axiosInstance = axios.create({
 	baseURL: API_BASE_URL,
